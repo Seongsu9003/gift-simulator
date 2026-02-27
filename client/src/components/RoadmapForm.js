@@ -1,0 +1,307 @@
+import React, { useState } from 'react';
+
+// 30년 증여 로드맵 컴포넌트
+function RoadmapForm() {
+  // 폼 상태
+  const [formData, setFormData] = useState({
+    childBirthDate: '',
+    relationship: 'child',
+    existingGiftAmount: '',
+    monthlyInvestment: ''
+  });
+
+  // 로딩 및 결과 상태
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
+  const [results, setResults] = useState(null);
+
+  // 입력값 변경 처리
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({
+      ...prev,
+      [name]: value
+    }));
+  };
+
+  // 폼 제출 처리
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+    setError('');
+
+    try {
+      // 백엔드 API 호출
+      const response = await fetch('http://localhost:3001/api/roadmap', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          childBirthDate: formData.childBirthDate,
+          relationship: formData.relationship,
+          existingGiftAmount: parseInt(formData.existingGiftAmount) || 0,
+          monthlyInvestment: parseInt(formData.monthlyInvestment)
+        })
+      });
+
+      if (!response.ok) {
+        throw new Error('API 호출에 실패했습니다.');
+      }
+
+      const data = await response.json();
+
+      if (data.success) {
+        setResults(data.data);
+      } else {
+        throw new Error(data.error || '결과를 가져오는데 실패했습니다.');
+      }
+    } catch (err) {
+      setError('오류가 발생했습니다: ' + err.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // 금액 포맷팅 함수
+  const formatCurrency = (amount) => {
+    return new Intl.NumberFormat('ko-KR').format(amount) + '원';
+  };
+
+  // 퍼센트 포맷팅 함수
+  const formatPercent = (percent) => {
+    return percent + '%';
+  };
+
+  return (
+    <div className="roadmap-container">
+      {/* 입력 폼 */}
+      <div className="form-container">
+        <h2 className="form-title">📊 30년 증여 로드맵 생성</h2>
+
+        <form onSubmit={handleSubmit}>
+          {/* 자녀 생년월일 */}
+          <div className="form-group">
+            <label htmlFor="childBirthDate" className="form-label">
+              자녀 생년월일
+            </label>
+            <input
+              type="date"
+              id="childBirthDate"
+              name="childBirthDate"
+              className="form-input"
+              value={formData.childBirthDate}
+              onChange={handleInputChange}
+              required
+            />
+          </div>
+
+          {/* 관계 선택 */}
+          <div className="form-group">
+            <label htmlFor="relationship" className="form-label">
+              자녀와의 관계
+            </label>
+            <select
+              id="relationship"
+              name="relationship"
+              className="form-select"
+              value={formData.relationship}
+              onChange={handleInputChange}
+            >
+              <option value="child">직계비속 (자녀)</option>
+              <option value="other">기타 친족</option>
+            </select>
+          </div>
+
+          {/* 기존 증여액 */}
+          <div className="form-group">
+            <label htmlFor="existingGiftAmount" className="form-label">
+              현재까지 증여한 금액 (원)
+            </label>
+            <input
+              type="number"
+              id="existingGiftAmount"
+              name="existingGiftAmount"
+              className="form-input"
+              value={formData.existingGiftAmount}
+              onChange={handleInputChange}
+              placeholder="0"
+              min="0"
+            />
+            <small style={{ color: '#6c757d', fontSize: '0.875rem' }}>
+              현재 10년 구간에서 이미 증여한 금액을 입력하세요
+            </small>
+          </div>
+
+          {/* 월 적립액 */}
+          <div className="form-group">
+            <label htmlFor="monthlyInvestment" className="form-label">
+              월 적립 희망 금액 (원)
+            </label>
+            <input
+              type="number"
+              id="monthlyInvestment"
+              name="monthlyInvestment"
+              className="form-input"
+              value={formData.monthlyInvestment}
+              onChange={handleInputChange}
+              placeholder="100000"
+              min="10000"
+              max="1000000"
+              step="10000"
+              required
+            />
+            <small style={{ color: '#6c757d', fontSize: '0.875rem' }}>
+              매월 투자할 수 있는 금액을 입력하세요 (1만원~100만원)
+            </small>
+          </div>
+
+          {/* 제출 버튼 */}
+          <button
+            type="submit"
+            className="form-button"
+            disabled={loading}
+          >
+            {loading ? '계산 중...' : '30년 로드맵 생성'}
+          </button>
+        </form>
+
+        {/* 에러 메시지 */}
+        {error && (
+          <div className="error">
+            {error}
+          </div>
+        )}
+      </div>
+
+      {/* 결과 표시 */}
+      {results && (
+        <div className="result-container">
+          {/* 자녀 정보 */}
+          <div className="result-card">
+            <h3 className="result-title">👶 자녀 정보</h3>
+            <div className="result-item">
+              <span className="result-label">현재 나이</span>
+              <span className="result-value">{results.childInfo.currentAge}세</span>
+            </div>
+            <div className="result-item">
+              <span className="result-label">생년월일</span>
+              <span className="result-value">{results.childInfo.birthDate}</span>
+            </div>
+            <div className="result-item">
+              <span className="result-label">관계</span>
+              <span className="result-value">
+                {results.childInfo.relationship === 'child' ? '직계비속 (자녀)' : '기타 친족'}
+              </span>
+            </div>
+          </div>
+
+          {/* 30년 계획 요약 */}
+          <div className="result-card">
+            <h3 className="result-title">📋 30년 계획 요약</h3>
+            <div className="result-item">
+              <span className="result-label">총 추천 증여액</span>
+              <span className="result-value" style={{ color: '#28a745', fontWeight: 'bold' }}>
+                {formatCurrency(results.planSummary.totalRecommendedGift)}
+              </span>
+            </div>
+            <div className="result-item">
+              <span className="result-label">총 절세 효과</span>
+              <span className="result-value" style={{ color: '#17a2b8', fontWeight: 'bold' }}>
+                {formatCurrency(results.planSummary.totalTaxSavings)}
+              </span>
+            </div>
+            <div className="result-item">
+              <span className="result-label">총 면제 한도</span>
+              <span className="result-value">
+                {formatCurrency(results.planSummary.totalExemptionUsed)}
+              </span>
+            </div>
+            <div className="result-item">
+              <span className="result-label">월 적립액</span>
+              <span className="result-value">
+                {formatCurrency(results.planSummary.monthlyInvestment)}
+              </span>
+            </div>
+          </div>
+
+          {/* 구간별 상세 계획 */}
+          <div className="result-card">
+            <h3 className="result-title">📅 구간별 상세 계획</h3>
+
+            {results.roadmapPeriods.map((period, index) => (
+              <div key={index} className="period-card" style={{
+                background: '#f8f9fa',
+                border: '1px solid #e9ecef',
+                borderRadius: '8px',
+                padding: '1.5rem',
+                marginBottom: '1rem'
+              }}>
+                <div style={{
+                  display: 'flex',
+                  justifyContent: 'space-between',
+                  alignItems: 'center',
+                  marginBottom: '1rem'
+                }}>
+                  <h4 style={{ margin: 0, color: '#495057' }}>
+                    {period.period} ({period.ageCategory})
+                  </h4>
+                  <div style={{
+                    background: period.exemptionUsageRate >= 80 ? '#dc3545' : '#28a745',
+                    color: 'white',
+                    padding: '0.25rem 0.75rem',
+                    borderRadius: '20px',
+                    fontSize: '0.875rem',
+                    fontWeight: 'bold'
+                  }}>
+                    면제한도 사용률: {formatPercent(period.exemptionUsageRate)}
+                  </div>
+                </div>
+
+                <div className="result-item">
+                  <span className="result-label">기간</span>
+                  <span className="result-value">{period.startYear}년 ~ {period.endYear}년</span>
+                </div>
+                <div className="result-item">
+                  <span className="result-label">면제 한도</span>
+                  <span className="result-value">{formatCurrency(period.exemptionLimit)}</span>
+                </div>
+                <div className="result-item">
+                  <span className="result-label">추천 증여액</span>
+                  <span className="result-value" style={{ color: '#28a745', fontWeight: 'bold' }}>
+                    {formatCurrency(period.recommendedGiftAmount)}
+                  </span>
+                </div>
+                <div className="result-item">
+                  <span className="result-label">절세 효과</span>
+                  <span className="result-value" style={{ color: '#17a2b8' }}>
+                    {formatCurrency(period.taxSavings)}
+                  </span>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          {/* 안내 메시지 */}
+          <div style={{
+            background: '#e7f3ff',
+            border: '1px solid #bee5eb',
+            borderRadius: '8px',
+            padding: '1rem',
+            marginTop: '1rem'
+          }}>
+            <h4 style={{ margin: '0 0 0.5rem 0', color: '#0c5460' }}>💡 안내사항</h4>
+            <ul style={{ margin: 0, paddingLeft: '1.5rem', color: '#0c5460' }}>
+              <li>증여세 면제 한도는 10년 단위로 적용됩니다</li>
+              <li>미성년 자녀는 2,000만원, 성인 자녀는 5,000만원까지 면세</li>
+              <li>조기에 증여할수록 복리 효과와 절세 혜택이 커집니다</li>
+              <li>실제 증여 시에는 세무 전문가와 상담을 권합니다</li>
+            </ul>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+export default RoadmapForm;
