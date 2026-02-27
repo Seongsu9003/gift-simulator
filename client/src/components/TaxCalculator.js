@@ -136,7 +136,7 @@ function TaxCalculator() {
     <div className="tax-calculator-container">
       {/* 입력 폼 */}
       <div className="form-container">
-        <h2 className="form-title">💰 증여세 계산기</h2>
+        <h2 className="form-title">💰 세금 계산해보기</h2>
 
         <form onSubmit={handleSubmit}>
           {/* 증여 금액 */}
@@ -195,7 +195,7 @@ function TaxCalculator() {
               value={formData.relationship}
               onChange={handleInputChange}
             >
-              <option value="child">직계비속 (자녀)</option>
+              <option value="child">자녀</option>
               <option value="spouse">배우자</option>
               <option value="other">기타 친족</option>
             </select>
@@ -227,7 +227,7 @@ function TaxCalculator() {
             className="form-button"
             disabled={loading}
           >
-            {loading ? '계산 중...' : '증여세 계산하기'}
+            {loading ? '계산 중...' : '세금 계산해보기'}
           </button>
         </form>
 
@@ -272,7 +272,7 @@ function TaxCalculator() {
             <div className="result-item">
               <span className="result-label">관계</span>
               <span className="result-value">
-                {results.relationship === 'child' ? '직계비속 (자녀)' :
+                {results.relationship === 'child' ? '자녀' :
                  results.relationship === 'spouse' ? '배우자' : '기타 친족'}
               </span>
             </div>
@@ -310,8 +310,7 @@ function TaxCalculator() {
               <span className="result-label" style={{ fontSize: '1.1rem', fontWeight: 'bold' }}>
                 납부할 증여세
               </span>
-              <span className="result-value" style={{
-                color: results.taxAmount > 0 ? '#dc3545' : '#28a745',
+              <span className={`result-value ${results.taxAmount > 0 ? 'text-warning' : 'text-success'}`} style={{
                 fontSize: '1.2rem',
                 fontWeight: 'bold'
               }}>
@@ -322,8 +321,7 @@ function TaxCalculator() {
               <span className="result-label" style={{ fontSize: '1.1rem', fontWeight: 'bold' }}>
                 실제 수령 금액
               </span>
-              <span className="result-value" style={{
-                color: '#28a745',
+              <span className="result-value text-success" style={{
                 fontSize: '1.2rem',
                 fontWeight: 'bold'
               }}>
@@ -333,15 +331,9 @@ function TaxCalculator() {
           </div>
 
           {/* 세율 정보 */}
-          <div style={{
-            background: '#e7f3ff',
-            border: '1px solid #bee5eb',
-            borderRadius: '8px',
-            padding: '1rem',
-            marginTop: '1rem'
-          }}>
-            <h4 style={{ margin: '0 0 0.5rem 0', color: '#0c5460' }}>📈 증여세율 정보</h4>
-            <div style={{ color: '#0c5460', fontSize: '0.9rem' }}>
+          <div className="info-box">
+            <h4 style={{ margin: '0 0 0.5rem 0', color: '#3D2C2C' }}>📈 증여세율 정보</h4>
+            <div style={{ color: '#3D2C2C', fontSize: '0.9rem' }}>
               <p style={{ margin: '0.25rem 0' }}>• 면제 한도 초과분에 대해 누진세율 적용</p>
               <p style={{ margin: '0.25rem 0' }}>• 1억원 이하: 10% / 1~5억원: 20% / 5~10억원: 30%</p>
               <p style={{ margin: '0.25rem 0' }}>• 10~30억원: 40% / 30억원 초과: 50%</p>
@@ -349,14 +341,7 @@ function TaxCalculator() {
           </div>
 
           {/* 면책 조항 */}
-          <div style={{
-            background: '#fff3cd',
-            border: '1px solid #ffeaa7',
-            borderRadius: '8px',
-            padding: '1rem',
-            marginTop: '1rem',
-            textAlign: 'center'
-          }}>
+          <div className="highlight-box" style={{ textAlign: 'center' }}>
             <p style={{
               margin: 0,
               color: '#856404',

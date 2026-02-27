@@ -10,9 +10,9 @@ function App() {
 
   // 탭 정보
   const tabs = [
-    { id: 'roadmap', name: '30년 증여 로드맵', icon: '📊' },
-    { id: 'tax', name: '증여세 계산', icon: '💰' },
-    { id: 'simulator', name: '수익률 시뮬레이터', icon: '📈' }
+    { id: 'roadmap', name: '증여 플랜', icon: '📊' },
+    { id: 'tax', name: '세금 계산', icon: '💰' },
+    { id: 'simulator', name: '수익률 계산', icon: '📈' }
   ];
 
   // 탭 컨텐츠 렌더링

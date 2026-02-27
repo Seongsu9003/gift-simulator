@@ -113,7 +113,7 @@ function Simulator() {
     <div className="simulator-container">
       {/* 입력 폼 */}
       <div className="form-container">
-        <h2 className="form-title">📈 수익률 시뮬레이터</h2>
+        <h2 className="form-title">📈 수익률 확인하기</h2>
 
         <form onSubmit={handleSubmit}>
           {/* 월 적립액 슬라이더 */}
@@ -171,13 +171,8 @@ function Simulator() {
           </div>
 
           {/* 투자 정보 미리보기 */}
-          <div style={{
-            background: '#f8f9fa',
-            padding: '1rem',
-            borderRadius: '8px',
-            marginBottom: '1.5rem'
-          }}>
-            <h4 style={{ margin: '0 0 0.75rem 0', color: '#495057' }}>💡 투자 정보</h4>
+          <div className="info-box">
+            <h4 style={{ margin: '0 0 0.75rem 0', color: '#3D2C2C' }}>💡 투자 정보</h4>
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.5rem', fontSize: '0.9rem' }}>
               <div>
                 <strong>연 수익률:</strong> 10.23% (고정)
@@ -200,7 +195,7 @@ function Simulator() {
             className="form-button"
             disabled={loading}
           >
-            {loading ? '계산 중...' : '수익률 시뮬레이션 시작'}
+            {loading ? '계산 중...' : '수익률 확인하기'}
           </button>
         </form>
 
@@ -225,7 +220,7 @@ function Simulator() {
                 background: '#e7f3ff',
                 borderRadius: '8px'
               }}>
-                <div style={{ fontSize: '1.5rem', fontWeight: 'bold', color: '#0066cc' }}>
+                <div style={{ fontSize: '1.5rem', fontWeight: 'bold', color: '#FF8C69' }}>
                   {formatCurrency(results.summary.totalInvestment)}
                 </div>
                 <div style={{ fontSize: '0.9rem', color: '#666', marginTop: '0.25rem' }}>
@@ -238,7 +233,7 @@ function Simulator() {
                 background: '#e8f5e8',
                 borderRadius: '8px'
               }}>
-                <div style={{ fontSize: '1.5rem', fontWeight: 'bold', color: '#28a745' }}>
+                <div className="text-success" style={{ fontSize: '1.5rem', fontWeight: 'bold' }}>
                   {formatCurrency(results.summary.finalAssets)}
                 </div>
                 <div style={{ fontSize: '0.9rem', color: '#666', marginTop: '0.25rem' }}>
@@ -251,7 +246,7 @@ function Simulator() {
                 background: '#fff3cd',
                 borderRadius: '8px'
               }}>
-                <div style={{ fontSize: '1.5rem', fontWeight: 'bold', color: '#856404' }}>
+                <div className="text-success" style={{ fontSize: '1.5rem', fontWeight: 'bold' }}>
                   {formatCurrency(results.summary.totalProfit)}
                 </div>
                 <div style={{ fontSize: '0.9rem', color: '#666', marginTop: '0.25rem' }}>
@@ -264,7 +259,7 @@ function Simulator() {
                 background: '#f8d7da',
                 borderRadius: '8px'
               }}>
-                <div style={{ fontSize: '1.5rem', fontWeight: 'bold', color: '#721c24' }}>
+                <div style={{ fontSize: '1.5rem', fontWeight: 'bold', color: '#FF8C69' }}>
                   {results.summary.totalReturnMultiple}배
                 </div>
                 <div style={{ fontSize: '0.9rem', color: '#666', marginTop: '0.25rem' }}>
@@ -351,10 +346,10 @@ function Simulator() {
                       <td style={{ padding: '0.75rem', border: '1px solid #dee2e6', textAlign: 'right' }}>
                         {formatCurrencyShort(item.cumulativeInvestment)}
                       </td>
-                      <td style={{ padding: '0.75rem', border: '1px solid #dee2e6', textAlign: 'right', fontWeight: 'bold', color: '#28a745' }}>
+                      <td className="text-success" style={{ padding: '0.75rem', border: '1px solid #dee2e6', textAlign: 'right', fontWeight: 'bold' }}>
                         {formatCurrencyShort(item.projectedAssets)}
                       </td>
-                      <td style={{ padding: '0.75rem', border: '1px solid #dee2e6', textAlign: 'right', color: '#856404' }}>
+                      <td className="text-success" style={{ padding: '0.75rem', border: '1px solid #dee2e6', textAlign: 'right' }}>
                         {item.returnRate.toFixed(1)}%
                       </td>
                     </tr>
@@ -365,15 +360,9 @@ function Simulator() {
           </div>
 
           {/* 안내 사항 */}
-          <div style={{
-            background: '#e7f3ff',
-            border: '1px solid #bee5eb',
-            borderRadius: '8px',
-            padding: '1rem',
-            marginTop: '1rem'
-          }}>
-            <h4 style={{ margin: '0 0 0.5rem 0', color: '#0c5460' }}>💡 시뮬레이션 안내</h4>
-            <ul style={{ margin: 0, paddingLeft: '1.5rem', color: '#0c5460' }}>
+          <div className="info-box">
+            <h4 style={{ margin: '0 0 0.5rem 0', color: '#3D2C2C' }}>💡 시뮬레이션 안내</h4>
+            <ul style={{ margin: 0, paddingLeft: '1.5rem', color: '#3D2C2C' }}>
               <li>연 수익률 10.23%는 역사적 S&P 500 평균 기준입니다</li>
               <li>실제 투자 수익률은 시장 상황에 따라 변동될 수 있습니다</li>
               <li>복리 효과를 고려한 월 적립식 투자 기준으로 계산됩니다</li>
@@ -382,17 +371,10 @@ function Simulator() {
           </div>
 
           {/* 면책 조항 */}
-          <div style={{
-            background: '#fff3cd',
-            border: '1px solid #ffeaa7',
-            borderRadius: '8px',
-            padding: '1rem',
-            marginTop: '1rem',
-            textAlign: 'center'
-          }}>
+          <div className="highlight-box" style={{ textAlign: 'center' }}>
             <p style={{
               margin: 0,
-              color: '#856404',
+              color: '#3D2C2C',
               fontWeight: 'bold',
               fontSize: '0.95rem'
             }}>
@@ -400,7 +382,7 @@ function Simulator() {
             </p>
             <p style={{
               margin: '0.5rem 0 0 0',
-              color: '#856404',
+              color: '#3D2C2C',
               fontSize: '0.875rem'
             }}>
               투자 결정 시에는 다양한 요소를 종합적으로 고려하시기 바랍니다.

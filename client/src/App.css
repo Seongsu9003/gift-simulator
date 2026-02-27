@@ -10,8 +10,8 @@ body {
     'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
     sans-serif;
   line-height: 1.6;
-  color: #333;
-  background-color: #f8f9fa;
+  color: #3D2C2C;
+  background-color: #FFFDF9;
 }
 
 .container {
@@ -29,11 +29,11 @@ body {
 
 /* 헤더 스타일 */
 .app-header {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, #FF8C69 0%, #FFB4A0 100%);
   color: white;
   padding: 2rem 0;
   text-align: center;
-  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+  box-shadow: 0 4px 20px rgba(255, 140, 105, 0.2);
 }
 
 .app-title {
@@ -80,8 +80,8 @@ body {
 }
 
 .tab-button.active {
-  border-bottom-color: #667eea;
-  background-color: #f8f9fa;
+  border-bottom-color: #FF8C69;
+  background-color: #FFF5F3;
 }
 
 .tab-icon {
@@ -95,7 +95,7 @@ body {
 }
 
 .tab-button.active .tab-name {
-  color: #667eea;
+  color: #FF8C69;
   font-weight: 600;
 }
 
@@ -108,17 +108,18 @@ body {
 /* 폼 기본 스타일 */
 .form-container {
   background: white;
-  border-radius: 12px;
-  box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+  border-radius: 20px;
+  box-shadow: 0 8px 32px rgba(255, 140, 105, 0.15);
   padding: 2rem;
   margin-bottom: 2rem;
+  border: 1px solid rgba(255, 140, 105, 0.1);
 }
 
 .form-title {
   font-size: 1.5rem;
-  font-weight: 600;
+  font-weight: 700;
   margin-bottom: 1.5rem;
-  color: #343a40;
+  color: #3D2C2C;
   text-align: center;
 }
 
@@ -137,34 +138,38 @@ body {
 .form-select {
   width: 100%;
   padding: 0.75rem;
-  border: 2px solid #e9ecef;
-  border-radius: 8px;
+  border: 2px solid #F0F0F0;
+  border-radius: 16px;
   font-size: 1rem;
-  transition: border-color 0.2s ease;
+  transition: all 0.2s ease;
+  background-color: #FEFEFE;
 }
 
 .form-input:focus,
 .form-select:focus {
   outline: none;
-  border-color: #667eea;
-  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+  border-color: #FF8C69;
+  box-shadow: 0 0 0 3px rgba(255, 140, 105, 0.15);
+  background-color: white;
 }
 
 .form-button {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, #FF8C69 0%, #FFB4A0 100%);
   color: white;
   border: none;
   padding: 1rem 2rem;
   font-size: 1rem;
   font-weight: 600;
-  border-radius: 8px;
+  border-radius: 20px;
   cursor: pointer;
-  transition: transform 0.2s ease;
+  transition: all 0.2s ease;
   width: 100%;
+  box-shadow: 0 4px 16px rgba(255, 140, 105, 0.3);
 }
 
 .form-button:hover {
-  transform: translateY(-1px);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(255, 140, 105, 0.4);
 }
 
 .form-button:disabled {
@@ -180,25 +185,26 @@ body {
 
 .result-card {
   background: white;
-  border-radius: 12px;
-  box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+  border-radius: 20px;
+  box-shadow: 0 8px 32px rgba(255, 140, 105, 0.12);
   padding: 1.5rem;
   margin-bottom: 1rem;
+  border: 1px solid rgba(255, 140, 105, 0.08);
 }
 
 .result-title {
   font-size: 1.2rem;
-  font-weight: 600;
+  font-weight: 700;
   margin-bottom: 1rem;
-  color: #343a40;
+  color: #3D2C2C;
 }
 
 .result-item {
   display: flex;
-  justify-content: between;
+  justify-content: space-between;
   align-items: center;
   padding: 0.5rem 0;
-  border-bottom: 1px solid #f8f9fa;
+  border-bottom: 1px solid #FFF5F3;
 }
 
 .result-item:last-child {
@@ -207,12 +213,12 @@ body {
 
 .result-label {
   font-weight: 500;
-  color: #6c757d;
+  color: #8B6F6F;
 }
 
 .result-value {
   font-weight: 600;
-  color: #495057;
+  color: #3D2C2C;
 }
 
 /* 로딩 및 에러 상태 */
@@ -223,18 +229,48 @@ body {
 }
 
 .error {
-  background-color: #f8d7da;
-  color: #721c24;
+  background-color: #FFE5E5;
+  color: #C54545;
   padding: 1rem;
-  border-radius: 8px;
+  border-radius: 16px;
   margin: 1rem 0;
-  border: 1px solid #f5c6cb;
+  border: 1px solid #FFB3B3;
 }
 
 /* 게이지 컨테이너 */
 .gauge-container {
   text-align: center;
   padding: 2rem 1rem;
+}
+
+/* 성공/긍정 색상 (절세 효과) */
+.text-success {
+  color: #22C55E !important;
+  font-weight: 600;
+}
+
+/* 경고 색상 */
+.text-warning {
+  color: #F59E0B !important;
+  font-weight: 600;
+}
+
+/* 안내 박스 */
+.info-box {
+  background: linear-gradient(135deg, #E8F4FD 0%, #F0F9FF 100%);
+  border: 1px solid #BFDBFE;
+  border-radius: 20px;
+  padding: 1.5rem;
+  margin: 1rem 0;
+}
+
+/* 하이라이트 박스 */
+.highlight-box {
+  background: linear-gradient(135deg, #FFF7ED 0%, #FFFBF7 100%);
+  border: 1px solid #FFD4B3;
+  border-radius: 20px;
+  padding: 1.5rem;
+  margin: 1rem 0;
 }
 
 .gauge-value {
