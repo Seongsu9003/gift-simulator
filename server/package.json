@@ -1,0 +1,17 @@
+{
+  "name": "gift-simulator-server",
+  "version": "1.0.0",
+  "description": "증여 시뮬레이터 백엔드 API 서버",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "dev": "node index.js"
+  },
+  "keywords": ["gift", "tax", "simulator", "investment"],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "cors": "^2.8.6",
+    "express": "^5.2.1"
+  }
+}

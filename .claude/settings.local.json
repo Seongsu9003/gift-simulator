@@ -1,0 +1,28 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npx create-react-app client)",
+      "Bash(mkdir server)",
+      "Bash(npm init -y)",
+      "Bash(npm install express cors)",
+      "Bash(npm install express cors --prefix ./server)",
+      "Bash(tree -I 'node_modules|.git' -a)",
+      "Bash(npm start)",
+      "Bash(curl -X GET http://localhost:5000/)",
+      "Bash(python3 -m json.tool)",
+      "Bash(curl -s http://localhost:5000/)",
+      "Bash(lsof -ti:5000)",
+      "Bash(node index.js)",
+      "Bash(curl -X POST http://localhost:5000/api/roadmap )",
+      "Bash(pkill -f \"node index.js\")",
+      "Bash(node -c index.js)",
+      "Bash(curl -s http://localhost:3001/)",
+      "Bash(curl -X POST http://localhost:3001/api/roadmap )",
+      "Bash(curl -X POST http://localhost:3001/api/tax )",
+      "Bash(curl -X POST http://localhost:3001/api/simulator )",
+      "Bash(npm install recharts)"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}
