@@ -32,7 +32,7 @@ function RoadmapForm() {
 
     try {
       // 백엔드 API 호출
-      const response = await fetch('http://localhost:3001/api/roadmap', {
+      const response = await fetch('https://gift-simulator-production.up.railway.app/api/roadmap', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

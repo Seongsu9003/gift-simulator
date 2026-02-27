@@ -40,7 +40,7 @@ function Simulator() {
 
     try {
       // 백엔드 API 호출
-      const response = await fetch('http://localhost:3001/api/simulator', {
+      const response = await fetch('https://gift-simulator-production.up.railway.app/api/simulator', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
