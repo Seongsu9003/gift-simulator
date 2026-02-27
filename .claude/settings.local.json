@@ -20,7 +20,19 @@
       "Bash(curl -X POST http://localhost:3001/api/roadmap )",
       "Bash(curl -X POST http://localhost:3001/api/tax )",
       "Bash(curl -X POST http://localhost:3001/api/simulator )",
-      "Bash(npm install recharts)"
+      "Bash(npm install recharts)",
+      "Bash(git add server/nixpacks.toml)",
+      "Bash(git commit -m \"$(cat <<''EOF''\nfix: Railway 배포 설정 추가\n\n🚀 Generated with [Claude Code](https://claude.ai/code)\n\nCo-Authored-By: Claude <noreply@anthropic.com>\nEOF\n)\")",
+      "Bash(git push origin main)",
+      "Bash(git add -u)",
+      "Bash(git reset HEAD .claude/settings.local.json)",
+      "Bash(git commit -m \"$(cat <<''EOF''\nfix: nixpacks.toml 제거, package.json start 스크립트 확인\n\n🚀 Generated with [Claude Code](https://claude.ai/code)\n\nCo-Authored-By: Claude <noreply@anthropic.com>\nEOF\n)\")",
+      "Bash(git add client/src/components/)",
+      "Bash(git commit -m \"$(cat <<''EOF''\nfeat: API URL을 Railway 배포 주소로 변경\n\n🚀 Generated with [Claude Code](https://claude.ai/code)\n\nCo-Authored-By: Claude <noreply@anthropic.com>\nEOF\n)\")",
+      "Bash(git add claude.md)",
+      "Bash(git commit -m \"$(cat <<''EOF''\ndocs: claude.md 디자인 시스템 추가\n\n🚀 Generated with [Claude Code](https://claude.ai/code)\n\nCo-Authored-By: Claude <noreply@anthropic.com>\nEOF\n)\")",
+      "Bash(git add client/src/)",
+      "Bash(git commit -m \"$(cat <<''EOF''\ndesign: UI/UX 전면 개선 - 파스텔 테마 및 한국어 UX 다듬기\n\n🚀 Generated with [Claude Code](https://claude.ai/code)\n\nCo-Authored-By: Claude <noreply@anthropic.com>\nEOF\n)\")"
     ],
     "deny": [],
     "ask": []
