@@ -10,6 +10,13 @@ function RoadmapForm() {
     monthlyInvestment: ''
   });
 
+  // 날짜 선택 상태
+  const [dateSelection, setDateSelection] = useState({
+    year: '',
+    month: '',
+    day: ''
+  });
+
   // 로딩 및 결과 상태
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
@@ -22,6 +29,58 @@ function RoadmapForm() {
       ...prev,
       [name]: value
     }));
+  };
+
+  // 날짜 선택 처리
+  const handleDateChange = (field, value) => {
+    setDateSelection(prev => {
+      const newSelection = { ...prev, [field]: value };
+
+      // 일 수 조정 (선택한 월에 맞게)
+      if (field === 'month' && newSelection.day) {
+        const daysInMonth = getDaysInMonth(parseInt(newSelection.year) || 2024, parseInt(value));
+        if (parseInt(newSelection.day) > daysInMonth) {
+          newSelection.day = daysInMonth.toString();
+        }
+      }
+
+      // 전체 날짜가 선택되면 formData 업데이트
+      if (newSelection.year && newSelection.month && newSelection.day) {
+        const formattedDate = `${newSelection.year}-${newSelection.month.padStart(2, '0')}-${newSelection.day.padStart(2, '0')}`;
+        setFormData(prev => ({ ...prev, childBirthDate: formattedDate }));
+      }
+
+      return newSelection;
+    });
+  };
+
+  // 월별 날짜 수 계산
+  const getDaysInMonth = (year, month) => {
+    return new Date(year, month, 0).getDate();
+  };
+
+  // 연도 옵션 생성 (1994~2026, 역순)
+  const yearOptions = [];
+  for (let year = 2026; year >= 1994; year--) {
+    yearOptions.push(year);
+  }
+
+  // 월 옵션 생성
+  const monthOptions = [];
+  for (let month = 1; month <= 12; month++) {
+    monthOptions.push(month);
+  }
+
+  // 일 옵션 생성
+  const getDayOptions = () => {
+    if (!dateSelection.year || !dateSelection.month) return [];
+
+    const daysInMonth = getDaysInMonth(parseInt(dateSelection.year), parseInt(dateSelection.month));
+    const dayOptions = [];
+    for (let day = 1; day <= daysInMonth; day++) {
+      dayOptions.push(day);
+    }
+    return dayOptions;
   };
 
   // 폼 제출 처리
@@ -91,19 +150,50 @@ function RoadmapForm() {
         <form onSubmit={handleSubmit}>
           {/* 자녀 생년월일 */}
           <div className="form-group">
-            <label htmlFor="childBirthDate" className="form-label">
+            <label className="form-label">
               자녀 생년월일
             </label>
-            <input
-              type="date"
-              id="childBirthDate"
-              name="childBirthDate"
-              className="form-input"
-              value={formData.childBirthDate}
-              onChange={handleInputChange}
-              placeholder="예: 2024-01-01"
-              required
-            />
+            <div className="date-picker-container">
+              <select
+                className="form-select date-select"
+                value={dateSelection.year}
+                onChange={(e) => handleDateChange('year', e.target.value)}
+                required
+              >
+                <option value="">연도</option>
+                {yearOptions.map(year => (
+                  <option key={year} value={year}>{year}년</option>
+                ))}
+              </select>
+
+              <select
+                className="form-select date-select"
+                value={dateSelection.month}
+                onChange={(e) => handleDateChange('month', e.target.value)}
+                required
+              >
+                <option value="">월</option>
+                {monthOptions.map(month => (
+                  <option key={month} value={month}>{month}월</option>
+                ))}
+              </select>
+
+              <select
+                className="form-select date-select"
+                value={dateSelection.day}
+                onChange={(e) => handleDateChange('day', e.target.value)}
+                required
+                disabled={!dateSelection.year || !dateSelection.month}
+              >
+                <option value="">일</option>
+                {getDayOptions().map(day => (
+                  <option key={day} value={day}>{day}일</option>
+                ))}
+              </select>
+            </div>
+            <small style={{ color: '#8B6F6F', fontSize: '0.875rem' }}>
+              자녀의 생년월일을 선택해주세요
+            </small>
           </div>
 
           {/* 관계 선택 */}

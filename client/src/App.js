@@ -34,8 +34,26 @@ function App() {
       {/* 헤더 */}
       <header className="app-header">
         <div className="container">
-          <h1 className="app-title">🎁 증여 시뮬레이터</h1>
-          <p className="app-subtitle">자녀의 30년 금융 미래를 설계하세요</p>
+          <div className="hero-content">
+            <div className="hero-icon">👶💛🧑‍💼</div>
+            <h1 className="app-title">우리 아이가 서른 살이 된다면? 🌱</h1>
+            <p className="app-subtitle">지금 시작하는 증여 한 번이 아이의 30년을 바꿉니다</p>
+
+            <div className="hero-badges">
+              <div className="badge">
+                <span className="badge-icon">📊</span>
+                <span className="badge-text">10년 단위 면세 한도 활용</span>
+              </div>
+              <div className="badge">
+                <span className="badge-icon">📈</span>
+                <span className="badge-text">복리 효과로 자산 증식</span>
+              </div>
+              <div className="badge">
+                <span className="badge-icon">🎯</span>
+                <span className="badge-text">30년 증여 플랜 자동 생성</span>
+              </div>
+            </div>
+          </div>
         </div>
       </header>
 
