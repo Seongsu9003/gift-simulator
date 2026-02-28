@@ -5,7 +5,8 @@ import { db, auth } from '../firebase';
 function ChildSetup({ onComplete }) {
   const [formData, setFormData] = useState({
     childName: '',
-    relationship: 'child'
+    relationship: 'child',
+    gender: ''
   });
 
   const [dateSelection, setDateSelection] = useState({
@@ -78,6 +79,11 @@ function ChildSetup({ onComplete }) {
       return;
     }
 
+    if (!formData.gender) {
+      setError('자녀 성별을 선택해주세요.');
+      return;
+    }
+
     setLoading(true);
     setError('');
 
@@ -91,6 +97,7 @@ function ChildSetup({ onComplete }) {
         childName: formData.childName.trim(),
         childBirthDate: birthDate,
         relationship: formData.relationship,
+        gender: formData.gender,
         createdAt: new Date(),
         updatedAt: new Date()
       };
@@ -200,6 +207,28 @@ function ChildSetup({ onComplete }) {
                 <option value="child">자녀</option>
                 <option value="grandchild">손자녀</option>
               </select>
+            </div>
+
+            <div className="form-group">
+              <label className="form-label">
+                성별
+              </label>
+              <div className="gender-selector">
+                <button
+                  type="button"
+                  className={`gender-button ${formData.gender === 'male' ? 'selected' : ''}`}
+                  onClick={() => setFormData(prev => ({...prev, gender: 'male'}))}
+                >
+                  👦 남자아이
+                </button>
+                <button
+                  type="button"
+                  className={`gender-button ${formData.gender === 'female' ? 'selected' : ''}`}
+                  onClick={() => setFormData(prev => ({...prev, gender: 'female'}))}
+                >
+                  👧 여자아이
+                </button>
+              </div>
             </div>
 
             {error && (

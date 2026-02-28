@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
 // 30년 증여 로드맵 컴포넌트
 function RoadmapForm({ childInfo }) {
@@ -21,6 +21,27 @@ function RoadmapForm({ childInfo }) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [results, setResults] = useState(null);
+
+  // 자녀 정보 자동 채우기
+  useEffect(() => {
+    if (childInfo && childInfo.childBirthDate) {
+      const [year, month, day] = childInfo.childBirthDate.split('-');
+
+      // 날짜 선택 상태 설정
+      setDateSelection({
+        year: year,
+        month: parseInt(month).toString(),
+        day: parseInt(day).toString()
+      });
+
+      // 폼 데이터 설정
+      setFormData(prev => ({
+        ...prev,
+        childBirthDate: childInfo.childBirthDate,
+        relationship: childInfo.relationship || 'child'
+      }));
+    }
+  }, [childInfo]);
 
   // 입력값 변경 처리
   const handleInputChange = (e) => {
@@ -148,6 +169,16 @@ function RoadmapForm({ childInfo }) {
         <h2 className="form-title">📊 내 아이 증여 플랜 만들기</h2>
 
         <form onSubmit={handleSubmit}>
+          {/* 자동 입력된 자녀 정보 안내 */}
+          {childInfo && (
+            <div className="auto-filled-notice">
+              <span className="notice-icon">✨</span>
+              <span className="notice-text">
+                {childInfo.childName}이의 정보로 자동 입력되었어요 (변경하려면 프로필에서 수정해주세요)
+              </span>
+            </div>
+          )}
+
           {/* 자녀 생년월일 */}
           <div className="form-group">
             <label className="form-label">
@@ -155,10 +186,11 @@ function RoadmapForm({ childInfo }) {
             </label>
             <div className="date-picker-container">
               <select
-                className="form-select date-select"
+                className={`form-select date-select ${childInfo ? 'readonly' : ''}`}
                 value={dateSelection.year}
                 onChange={(e) => handleDateChange('year', e.target.value)}
                 required
+                disabled={childInfo}
               >
                 <option value="">연도</option>
                 {yearOptions.map(year => (
@@ -167,10 +199,11 @@ function RoadmapForm({ childInfo }) {
               </select>
 
               <select
-                className="form-select date-select"
+                className={`form-select date-select ${childInfo ? 'readonly' : ''}`}
                 value={dateSelection.month}
                 onChange={(e) => handleDateChange('month', e.target.value)}
                 required
+                disabled={childInfo}
               >
                 <option value="">월</option>
                 {monthOptions.map(month => (
@@ -179,11 +212,11 @@ function RoadmapForm({ childInfo }) {
               </select>
 
               <select
-                className="form-select date-select"
+                className={`form-select date-select ${childInfo ? 'readonly' : ''}`}
                 value={dateSelection.day}
                 onChange={(e) => handleDateChange('day', e.target.value)}
                 required
-                disabled={!dateSelection.year || !dateSelection.month}
+                disabled={childInfo || (!dateSelection.year || !dateSelection.month)}
               >
                 <option value="">일</option>
                 {getDayOptions().map(day => (
@@ -191,9 +224,11 @@ function RoadmapForm({ childInfo }) {
                 ))}
               </select>
             </div>
-            <small style={{ color: '#8B6F6F', fontSize: '0.875rem' }}>
-              자녀의 생년월일을 선택해주세요
-            </small>
+            {!childInfo && (
+              <small style={{ color: '#8B6F6F', fontSize: '0.875rem' }}>
+                자녀의 생년월일을 선택해주세요
+              </small>
+            )}
           </div>
 
           {/* 관계 선택 */}
@@ -204,8 +239,9 @@ function RoadmapForm({ childInfo }) {
             <select
               id="relationship"
               name="relationship"
-              className="form-select"
+              className={`form-select ${childInfo ? 'readonly' : ''}`}
               value={formData.relationship}
+              disabled={childInfo}
               onChange={handleInputChange}
             >
               <option value="child">자녀</option>

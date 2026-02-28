@@ -669,6 +669,56 @@ body {
   }
 }
 
+/* 성별 선택 버튼 스타일 */
+.gender-selector {
+  display: flex;
+  gap: 1rem;
+  margin-top: 0.5rem;
+}
+
+.gender-button {
+  flex: 1;
+  padding: 1rem 1.5rem;
+  border: 2px solid #E8E8E8;
+  border-radius: 16px;
+  background: white;
+  color: #3D2C2C;
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.gender-button:hover {
+  border-color: #FF8C69;
+  background: #FFF8F6;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(255, 140, 105, 0.15);
+}
+
+.gender-button.selected {
+  border-color: #FF8C69;
+  background: linear-gradient(135deg, #FF8C69 0%, #FFB4A0 100%);
+  color: white;
+  box-shadow: 0 4px 15px rgba(255, 140, 105, 0.3);
+}
+
+.gender-button.selected:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 20px rgba(255, 140, 105, 0.4);
+}
+
+@media (max-width: 768px) {
+  .gender-selector {
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+}
+
 @media (max-width: 480px) {
   .app-title {
     font-size: 1.5rem;
@@ -681,4 +731,47 @@ body {
   .form-container {
     padding: 1rem;
   }
+
+  .gender-button {
+    padding: 0.875rem 1rem;
+    font-size: 0.95rem;
+  }
+}
+
+/* 자동 입력 안내 문구 스타일 */
+.auto-filled-notice {
+  background: linear-gradient(135deg, #E6F3FF 0%, #F0F9FF 100%);
+  border: 1px solid #B3D9FF;
+  border-radius: 12px;
+  padding: 1rem 1.25rem;
+  margin-bottom: 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.notice-icon {
+  font-size: 1.25rem;
+  flex-shrink: 0;
+}
+
+.notice-text {
+  color: #1976D2;
+  font-size: 0.95rem;
+  font-weight: 500;
+  line-height: 1.4;
+}
+
+/* readonly 필드 스타일 */
+.form-select.readonly,
+.form-input.readonly {
+  background: #F5F5F5 !important;
+  color: #666 !important;
+  border-color: #E0E0E0 !important;
+  cursor: not-allowed !important;
+}
+
+.form-select.readonly:disabled,
+.form-input.readonly:disabled {
+  opacity: 0.7;
 }
