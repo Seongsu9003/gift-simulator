@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 
 // 30년 증여 로드맵 컴포넌트
-function RoadmapForm() {
+function RoadmapForm({ childInfo }) {
   // 폼 상태
   const [formData, setFormData] = useState({
     childBirthDate: '',
