@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { onAuthStateChanged, signOut } from 'firebase/auth';
-import { doc, getDoc } from 'firebase/firestore';
-import { auth, db } from './firebase';
+import { auth } from './firebase';
 import './App.css';
 import RoadmapForm from './components/RoadmapForm';
 import TaxCalculator from './components/TaxCalculator';
