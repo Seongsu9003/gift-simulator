@@ -1,10 +1,11 @@
-# 증여 시뮬레이터 (gift_simulator) - Claude 가이드
+# 증여 시뮬레이터 (gift_simulator) - Claude 가이드 v1.1.0
 
 ## 프로젝트 개요
 
 - **프로젝트명**: 증여 시뮬레이터 (gift_simulator)
+- **버전**: v1.1.0 (MVP 개발 완료)
 - **목적**: 팀 모바일 앱에 정식 기능 추가 전 MVP 모델로 먼저 구현
-- **형태**: 풀스택 웹 애플리케이션 (React + Node.js/Express)
+- **형태**: 풀스택 웹 애플리케이션 (React + Node.js/Express + Firebase)
 
 ---
 
@@ -15,6 +16,8 @@
 | 프론트엔드 | React |
 | 백엔드 | Node.js / Express |
 | 데이터베이스 | PostgreSQL |
+| 인증 | Firebase Authentication (Google OAuth) |
+| NoSQL | Firebase Firestore (사용자 및 자녀 정보) |
 | 언어 | JavaScript (TypeScript 미사용) |
 | 차트 | Recharts (수익률 시뮬레이터 시각화) |
 
@@ -24,20 +27,57 @@
 
 MVP는 핵심 3가지 기능에만 집중합니다.
 
-### ✅ MVP에 포함
+### ✅ MVP에 포함 (v1.1.0 기준)
 
 | 기능 | 설명 |
 |------|------|
 | 30년 증여 로드맵 생성기 | 자녀 정보(생년월일, 기존 증여액, 월 적립액) 입력 → 구간별 최적 플랜 자동 생성 |
 | 증여세 시뮬레이터 | 면제 한도(미성년 2,000만 원 / 성인 5,000만 원) 기준 세금 자동 계산 |
 | 수익률 시뮬레이터 | 연 수익률 10.23% 고정, 월 적립식 복리 계산으로 30년 후 예상 자산 시각화 |
+| **Firebase Google 로그인** | **Google OAuth를 통한 간편 로그인/로그아웃 기능** |
+| **복수 자녀 관리** | **여러 자녀 등록 및 자녀별 맞춤 증여 플랜 생성** |
+| **자녀 정보 관리** | **이름, 생년월일, 성별, 관계 정보 저장 및 수정** |
 
 ### ❌ V2로 이연
 
 - 증여 이력 관리 (날짜/금액 기록 및 추적)
 - ETF 상품 비교 (VOO / QQQM 구분 시뮬레이션)
-- 회원가입 / 소셜 로그인
 - PDF 내보내기
+
+---
+
+## Firebase & Firestore 데이터 구조 (v1.1.0)
+
+### Firebase Authentication
+- **Google OAuth** 기반 로그인/로그아웃
+- 사용자 인증 상태 관리
+- Firebase SDK를 통한 인증 처리
+
+### Firestore 데이터베이스 구조
+```
+users (collection)
+├─ {userId} (document)
+   ├─ email: string
+   ├─ name: string
+   ├─ createdAt: timestamp
+   └─ children (subcollection)
+      ├─ {childId} (document)
+      │  ├─ name: string           // 자녀 이름
+      │  ├─ birthDate: string      // 생년월일 (YYYY-MM-DD)
+      │  ├─ gender: string         // 성별 ('male' | 'female')
+      │  ├─ relationship: string   // 관계 ('child' | 'grandchild')
+      │  ├─ createdAt: timestamp
+      │  └─ updatedAt: timestamp
+      └─ {childId2} (document)
+         └─ ... (같은 구조)
+```
+
+### 주요 Firestore 함수들
+- `getChildren()`: 사용자의 모든 자녀 목록 조회
+- `addChild(childData)`: 새 자녀 정보 추가
+- `updateChild(childId, updateData)`: 자녀 정보 수정
+- `deleteChild(childId)`: 자녀 정보 삭제
+- `migrateOldChildData()`: 기존 단일 자녀 데이터를 복수 자녀 구조로 마이그레이션
 
 ---
 
@@ -49,6 +89,29 @@ MVP는 핵심 3가지 기능에만 집중합니다.
 - 면제 한도 초과 시 세율: 10% ~ 50% 누진세율 적용
 - 수익률 시뮬레이터 연 수익률: **10.23% 고정**
 - 현행 증여세법 2025년 기준 적용
+
+---
+
+## 사용자 플로우 (v1.1.0)
+
+### 1. 로그인 플로우
+1. 랜딩 페이지에서 **"Google로 시작하기"** 버튼 클릭
+2. Firebase Google OAuth 팝업을 통한 간편 로그인
+3. 로그인 성공 시 메인 대시보드로 이동
+
+### 2. 자녀 관리 플로우
+1. **최초 로그인**: 자녀 정보가 없으면 자동으로 자녀 등록 화면 표시
+2. **자녀 목록**: 등록된 자녀들을 카드 형태로 표시
+   - 이름, 생년월일, 만 나이, 성별 이모지(👦/👧) 표시
+   - 각 카드에 **"선택"** 버튼으로 해당 자녀의 증여 플랜으로 이동
+3. **자녀 추가**: **"+ 자녀 추가하기"** 버튼으로 새 자녀 등록
+4. **자녀 전환**: 상단 헤더의 자녀 이름 버튼으로 다른 자녀 선택 가능
+
+### 3. 증여 플랜 플로우
+1. 선택된 자녀 정보 자동 연동 (이름, 생년월일, 관계)
+2. 추가 정보 입력 (기존 증여액, 월 적립 희망액)
+3. **30년 증여 로드맵** 자동 생성
+4. 구간별 최적 플랜 및 절세 효과 시각화
 
 ---
 
