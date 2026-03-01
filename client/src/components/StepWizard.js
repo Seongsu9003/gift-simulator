@@ -424,6 +424,7 @@ function Step2Roadmap({ wizardData, updateWizardData, onNext }) {
   const [error, setError] = useState('');
 
   // 컴포넌트 마운트 시 자동으로 API 호출
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   React.useEffect(() => {
     if (!wizardData.roadmapResults) {
       handleCalculateRoadmap();
@@ -640,6 +641,7 @@ function Step3TaxCalculation({ wizardData, updateWizardData, onNext }) {
   const [error, setError] = useState('');
 
   // 컴포넌트 마운트 시 자동으로 API 호출
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   React.useEffect(() => {
     if (!wizardData.taxResults && wizardData.roadmapResults) {
       handleCalculateTax();
@@ -926,6 +928,7 @@ function Step4Simulator({ wizardData, updateWizardData }) {
   const [annualReturnRate, setAnnualReturnRate] = useState(10.23); // 연 수익률 상태 추가
 
   // 컴포넌트 마운트 시 자동으로 API 호출
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   React.useEffect(() => {
     if (!wizardData.simulatorResults) {
       handleCalculateSimulator();
