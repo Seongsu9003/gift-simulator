@@ -139,18 +139,7 @@ function App() {
           {/* 오른쪽 로그인 영역 */}
           <div className="login-section">
             <div className="login-content">
-              <div className="login-icon">👨‍👩‍👧💛</div>
-              <h2 className="login-title">시작하기</h2>
-              <p className="login-description">
-                Google 계정으로 로그인하고<br />
-                우리 아이만의 증여 플랜을 만들어보세요
-              </p>
-
-              <div className="login-form">
-                <Login />
-              </div>
-
-              <p className="login-security">🔒 개인정보는 안전하게 보호됩니다</p>
+              <Login />
             </div>
           </div>
         </div>
