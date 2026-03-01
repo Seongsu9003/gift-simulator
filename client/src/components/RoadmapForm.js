@@ -24,8 +24,8 @@ function RoadmapForm({ childInfo }) {
 
   // 자녀 정보 자동 채우기
   useEffect(() => {
-    if (childInfo && childInfo.childBirthDate) {
-      const [year, month, day] = childInfo.childBirthDate.split('-');
+    if (childInfo && childInfo.birthDate) {
+      const [year, month, day] = childInfo.birthDate.split('-');
 
       // 날짜 선택 상태 설정
       setDateSelection({
@@ -37,7 +37,7 @@ function RoadmapForm({ childInfo }) {
       // 폼 데이터 설정
       setFormData(prev => ({
         ...prev,
-        childBirthDate: childInfo.childBirthDate,
+        childBirthDate: childInfo.birthDate,
         relationship: childInfo.relationship || 'child'
       }));
     }
@@ -174,7 +174,7 @@ function RoadmapForm({ childInfo }) {
             <div className="auto-filled-notice">
               <span className="notice-icon">✨</span>
               <span className="notice-text">
-                {childInfo.childName}이의 정보로 자동 입력되었어요 (변경하려면 프로필에서 수정해주세요)
+                {childInfo.name}이의 정보로 자동 입력되었어요 (변경하려면 프로필에서 수정해주세요)
               </span>
             </div>
           )}
