@@ -494,7 +494,7 @@ function Step2Roadmap({ wizardData, updateWizardData, onNext }) {
         </div>
         <div className="loading-content">
           <div className="loading-icon">⏳</div>
-          <p>최적의 증여 플랜을 생성하고 있어요...</p>
+          <p>잠시만 기다려주세요 ✨</p>
         </div>
       </div>
     );
@@ -776,7 +776,7 @@ function Step3TaxCalculation({ wizardData, updateWizardData, onNext }) {
         </div>
         <div className="loading-content">
           <div className="loading-icon">⏳</div>
-          <p>증여세를 계산하고 있어요...</p>
+          <p>잠시만 기다려주세요 ✨</p>
         </div>
       </div>
     );
@@ -923,6 +923,7 @@ function Step4Simulator({ wizardData, updateWizardData }) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [monthlyAmount, setMonthlyAmount] = useState(parseInt(wizardData.monthlyInvestment) || 100000);
+  const [annualReturnRate, setAnnualReturnRate] = useState(10.23); // 연 수익률 상태 추가
 
   // 컴포넌트 마운트 시 자동으로 API 호출
   React.useEffect(() => {
@@ -932,7 +933,7 @@ function Step4Simulator({ wizardData, updateWizardData }) {
   }, []);
 
   // 수익률 시뮬레이션 API 호출
-  const handleCalculateSimulator = async (customAmount = null) => {
+  const handleCalculateSimulator = async (customAmount = null, customReturnRate = null) => {
     setLoading(true);
     setError('');
 
@@ -944,7 +945,8 @@ function Step4Simulator({ wizardData, updateWizardData }) {
         },
         body: JSON.stringify({
           monthlyAmount: customAmount || monthlyAmount,
-          investmentYears: 30
+          investmentYears: 30,
+          annualReturnRate: customReturnRate || annualReturnRate
         })
       });
 
@@ -974,7 +976,27 @@ function Step4Simulator({ wizardData, updateWizardData }) {
 
   // 슬라이더 변경 완료 시 재계산
   const handleSliderChangeComplete = () => {
-    handleCalculateSimulator(monthlyAmount);
+    handleCalculateSimulator(monthlyAmount, annualReturnRate);
+  };
+
+  // 연 수익률 슬라이더 변경 처리
+  const handleReturnRateChange = (e) => {
+    const value = parseFloat(e.target.value);
+    setAnnualReturnRate(value);
+  };
+
+  // 연 수익률 슬라이더 변경 완료 시 재계산
+  const handleReturnRateChangeComplete = () => {
+    handleCalculateSimulator(monthlyAmount, annualReturnRate);
+  };
+
+  // 기본값으로 되돌리기
+  const handleResetToDefault = () => {
+    setAnnualReturnRate(10.23);
+    // 0.1초 후 재계산 (상태 업데이트 후)
+    setTimeout(() => {
+      handleCalculateSimulator(monthlyAmount, 10.23);
+    }, 100);
   };
 
   // 금액 포맷팅 함수
@@ -1002,7 +1024,7 @@ function Step4Simulator({ wizardData, updateWizardData }) {
         </div>
         <div className="loading-content">
           <div className="loading-icon">⏳</div>
-          <p>30년 후 예상 자산을 계산하고 있어요...</p>
+          <p>잠시만 기다려주세요 ✨</p>
         </div>
       </div>
     );
@@ -1072,6 +1094,73 @@ function Step4Simulator({ wizardData, updateWizardData }) {
           }}>
             <span>1만원</span>
             <span>100만원</span>
+          </div>
+        </div>
+
+        {/* 연 수익률 조정 슬라이더 */}
+        <div className="form-group">
+          <label className="form-label">
+            연 수익률: <strong>{annualReturnRate.toFixed(2)}%</strong>
+            <button
+              onClick={handleResetToDefault}
+              style={{
+                marginLeft: '10px',
+                background: 'none',
+                border: 'none',
+                color: '#FF8C69',
+                fontSize: '0.875rem',
+                cursor: 'pointer',
+                textDecoration: 'underline'
+              }}
+            >
+              기본값으로 되돌리기
+            </button>
+          </label>
+          <input
+            type="range"
+            min="1"
+            max="20"
+            step="0.01"
+            value={annualReturnRate}
+            onChange={handleReturnRateChange}
+            onMouseUp={handleReturnRateChangeComplete}
+            onTouchEnd={handleReturnRateChangeComplete}
+            style={{
+              width: '100%',
+              height: '6px',
+              borderRadius: '3px',
+              background: '#ddd',
+              outline: 'none',
+              appearance: 'none'
+            }}
+          />
+          <div style={{
+            display: 'flex',
+            justifyContent: 'space-between',
+            fontSize: '0.875rem',
+            color: '#6c757d',
+            marginTop: '0.5rem'
+          }}>
+            <span>1%</span>
+            <span>20%</span>
+          </div>
+        </div>
+
+        {/* 수익률 안내 박스 */}
+        <div style={{
+          background: '#F0F9FF',
+          border: '1px solid #E0F2FE',
+          borderRadius: '12px',
+          padding: '16px',
+          marginTop: '16px'
+        }}>
+          <div style={{
+            fontSize: '13px',
+            color: '#6B7280',
+            lineHeight: '1.5'
+          }}>
+            💡 기본 수익률 10.23%는 S&P 500 지수의 최근 30년 연평균 수익률입니다.
+            실제 투자 수익률은 시장 상황에 따라 달라질 수 있어요.
           </div>
         </div>
       </div>
