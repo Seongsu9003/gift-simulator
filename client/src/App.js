@@ -2,17 +2,12 @@ import React, { useState, useEffect } from 'react';
 import { onAuthStateChanged, signOut } from 'firebase/auth';
 import { auth } from './firebase';
 import './App.css';
-import RoadmapForm from './components/RoadmapForm';
-import TaxCalculator from './components/TaxCalculator';
-import Simulator from './components/Simulator';
 import Login from './components/Login';
 import ChildSetup from './components/ChildSetup';
+import StepWizard from './components/StepWizard';
 import { getChildren, migrateOldChildData, getSelectedChildId } from './utils/firestore';
 
 function App() {
-  // 현재 활성 탭 상태
-  const [activeTab, setActiveTab] = useState('roadmap');
-
   // 사용자 인증 상태
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -88,31 +83,9 @@ function App() {
       setUser(null);
       setChildInfo(null);
       setNeedsChildSetup(false);
-      setActiveTab('roadmap');
       console.log('로그아웃 완료');
     } catch (error) {
       console.error('로그아웃 에러:', error);
-    }
-  };
-
-  // 탭 정보
-  const tabs = [
-    { id: 'roadmap', name: '증여 플랜', icon: '📊' },
-    { id: 'tax', name: '세금 계산', icon: '💰' },
-    { id: 'simulator', name: '수익률 계산', icon: '📈' }
-  ];
-
-  // 탭 컨텐츠 렌더링
-  const renderTabContent = () => {
-    switch (activeTab) {
-      case 'roadmap':
-        return <RoadmapForm childInfo={childInfo} />;
-      case 'tax':
-        return <TaxCalculator childInfo={childInfo} />;
-      case 'simulator':
-        return <Simulator />;
-      default:
-        return <RoadmapForm childInfo={childInfo} />;
     }
   };
 
@@ -191,7 +164,7 @@ function App() {
 
   return (
     <div className="app">
-      {/* 헤더 */}
+      {/* 자녀 전환 헤더 */}
       <header className="app-header">
         <div className="container">
           <div className="header-top">
@@ -209,36 +182,11 @@ function App() {
               로그아웃
             </button>
           </div>
-          <p className="header-subtitle">
-            지금부터 30년간 {childInfo?.name}이를 위한 최적의 증여 전략을 세워보세요
-          </p>
         </div>
       </header>
 
-      {/* 탭 네비게이션 */}
-      <nav className="tab-nav">
-        <div className="container">
-          <div className="tab-list">
-            {tabs.map(tab => (
-              <button
-                key={tab.id}
-                className={`tab-button ${activeTab === tab.id ? 'active' : ''}`}
-                onClick={() => setActiveTab(tab.id)}
-              >
-                <span className="tab-icon">{tab.icon}</span>
-                <span className="tab-name">{tab.name}</span>
-              </button>
-            ))}
-          </div>
-        </div>
-      </nav>
-
-      {/* 메인 컨텐츠 */}
-      <main className="main-content">
-        <div className="container">
-          {renderTabContent()}
-        </div>
-      </main>
+      {/* 스텝 위자드 */}
+      <StepWizard childInfo={childInfo} />
 
       {/* 푸터 */}
       <footer className="app-footer">
