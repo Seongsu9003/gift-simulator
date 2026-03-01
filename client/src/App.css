@@ -479,6 +479,8 @@ body {
   justify-content: space-between;
   align-items: center;
   margin-bottom: 1rem;
+  position: relative;
+  z-index: 2;
 }
 
 .child-switcher-section {
@@ -499,6 +501,9 @@ body {
   font-size: 0.9rem;
   cursor: pointer;
   transition: all 0.2s ease;
+  pointer-events: auto;
+  position: relative;
+  z-index: 10;
 }
 
 .child-switcher-button:hover {
@@ -530,6 +535,9 @@ body {
   font-size: 0.9rem;
   cursor: pointer;
   transition: all 0.2s ease;
+  pointer-events: auto;
+  position: relative;
+  z-index: 10;
 }
 
 .logout-button:hover {
