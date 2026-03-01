@@ -8,6 +8,7 @@ import TaxCalculator from './components/TaxCalculator';
 import Simulator from './components/Simulator';
 import Login from './components/Login';
 import ChildSetup from './components/ChildSetup';
+import { getChildren, migrateOldChildData, getSelectedChildId } from './utils/firestore';
 
 function App() {
   // 현재 활성 탭 상태
@@ -16,8 +17,9 @@ function App() {
   // 사용자 인증 상태
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [childInfo, setChildInfo] = useState(null);
+  const [childInfo, setChildInfo] = useState(null); // 현재 선택된 자녀 정보
   const [needsChildSetup, setNeedsChildSetup] = useState(false);
+  const [showChildSelector, setShowChildSelector] = useState(false);
 
   // Firebase 인증 상태 감지
   useEffect(() => {
@@ -25,31 +27,40 @@ function App() {
       setUser(user);
 
       if (user) {
-        // 사용자가 로그인된 경우 Firestore에서 자녀 정보 확인
+        // 사용자가 로그인된 경우 자녀 정보 확인
         try {
-          const userDoc = await getDoc(doc(db, 'users', user.uid));
-          if (userDoc.exists()) {
-            const userData = userDoc.data();
-            if (userData.childName && userData.childBirthDate) {
-              // 자녀 정보가 있는 경우
-              setChildInfo(userData);
-              setNeedsChildSetup(false);
-            } else {
-              // 자녀 정보가 없는 경우
-              setNeedsChildSetup(true);
-            }
-          } else {
-            // 사용자 문서가 없는 경우 (첫 로그인)
+          // 1. 먼저 기존 데이터 마이그레이션 시도
+          await migrateOldChildData();
+
+          // 2. 자녀 목록 조회
+          const children = await getChildren();
+
+          if (children.length === 0) {
+            // 자녀가 없는 경우 - 자녀 설정 화면으로
             setNeedsChildSetup(true);
+            setChildInfo(null);
+          } else {
+            // 자녀가 있는 경우 - 선택된 자녀 또는 첫 번째 자녀 설정
+            const selectedChildId = getSelectedChildId();
+            let selectedChild = children.find(child => child.id === selectedChildId);
+
+            if (!selectedChild) {
+              // 선택된 자녀가 없거나 찾을 수 없으면 첫 번째 자녀 선택
+              selectedChild = children[0];
+            }
+
+            setChildInfo(selectedChild);
+            setNeedsChildSetup(false);
           }
         } catch (error) {
           console.error('사용자 정보 로드 에러:', error);
           setNeedsChildSetup(true);
         }
       } else {
-        // 로그아웃된 경우
+        // 로그아웃된 경우 상태 초기화
         setChildInfo(null);
         setNeedsChildSetup(false);
+        setShowChildSelector(false);
       }
 
       setLoading(false);
@@ -58,16 +69,27 @@ function App() {
     return () => unsubscribe();
   }, []);
 
-  // 자녀 설정 완료 처리
+  // 자녀 설정 완료 처리 (자녀 선택 또는 추가 완료)
   const handleChildSetupComplete = (childData) => {
     setChildInfo(childData);
     setNeedsChildSetup(false);
+    setShowChildSelector(false);
+  };
+
+  // 자녀 전환 버튼 클릭 처리
+  const handleChildSwitcher = () => {
+    setShowChildSelector(true);
   };
 
   // 로그아웃 처리
   const handleLogout = async () => {
     try {
       await signOut(auth);
+      // 상태 초기화
+      setUser(null);
+      setChildInfo(null);
+      setNeedsChildSetup(false);
+      setActiveTab('roadmap');
       console.log('로그아웃 완료');
     } catch (error) {
       console.error('로그아웃 에러:', error);
@@ -159,11 +181,11 @@ function App() {
     );
   }
 
-  // 자녀 정보 입력이 필요한 경우
-  if (needsChildSetup) {
+  // 자녀 정보 입력이 필요한 경우 또는 자녀 선택 모드
+  if (needsChildSetup || showChildSelector) {
     return (
       <div className="app">
-        <ChildSetup onComplete={handleChildSetupComplete} />
+        <ChildSetup onChildSelected={handleChildSetupComplete} />
       </div>
     );
   }
@@ -174,15 +196,22 @@ function App() {
       <header className="app-header">
         <div className="container">
           <div className="header-top">
-            <h1 className="child-title">
-              {childInfo?.childName}이의 증여 플랜 💛
-            </h1>
+            <div className="child-switcher-section">
+              <button className="child-switcher-button" onClick={handleChildSwitcher}>
+                <span className="child-name">{childInfo?.name}</span>
+                <span className="child-emoji">{childInfo?.gender === 'male' ? '👦' : '👧'}</span>
+                <span className="dropdown-icon">▼</span>
+              </button>
+              <h1 className="child-title">
+                {childInfo?.name}이의 증여 플랜 💛
+              </h1>
+            </div>
             <button className="logout-button" onClick={handleLogout}>
               로그아웃
             </button>
           </div>
           <p className="header-subtitle">
-            지금부터 30년간 {childInfo?.childName}이를 위한 최적의 증여 전략을 세워보세요
+            지금부터 30년간 {childInfo?.name}이를 위한 최적의 증여 전략을 세워보세요
           </p>
         </div>
       </header>

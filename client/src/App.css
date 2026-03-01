@@ -481,6 +481,40 @@ body {
   margin-bottom: 1rem;
 }
 
+.child-switcher-section {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.child-switcher-button {
+  background: rgba(255, 255, 255, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 12px;
+  padding: 0.5rem 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: white;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.child-switcher-button:hover {
+  background: rgba(255, 255, 255, 0.3);
+  transform: translateY(-1px);
+}
+
+.child-switcher-button .child-name {
+  font-weight: 600;
+}
+
+.child-switcher-button .dropdown-icon {
+  font-size: 0.7rem;
+  opacity: 0.8;
+}
+
 .child-title {
   font-size: 1.8rem;
   font-weight: 700;
@@ -774,4 +808,176 @@ body {
 .form-select.readonly:disabled,
 .form-input.readonly:disabled {
   opacity: 0.7;
+}
+
+/* 자녀 목록 및 카드 스타일 */
+.children-list {
+  margin-bottom: 2rem;
+}
+
+.children-list-title {
+  color: #3D2C2C;
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+}
+
+.children-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 1.5rem;
+}
+
+.child-card {
+  background: white;
+  border: 2px solid #F0F0F0;
+  border-radius: 16px;
+  padding: 1.5rem;
+  transition: all 0.3s ease;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.child-card:hover {
+  border-color: #FF8C69;
+  box-shadow: 0 8px 25px rgba(255, 140, 105, 0.15);
+  transform: translateY(-2px);
+}
+
+.child-info {
+  flex: 1;
+}
+
+.child-header {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.75rem;
+}
+
+.child-name {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #3D2C2C;
+}
+
+.child-gender {
+  font-size: 1.5rem;
+}
+
+.child-details p {
+  margin: 0.25rem 0;
+  font-size: 0.9rem;
+  color: #6B6B6B;
+}
+
+.child-birth {
+  font-weight: 500;
+}
+
+.child-age {
+  color: #FF8C69;
+  font-weight: 600;
+}
+
+.select-child-button {
+  background: linear-gradient(135deg, #FF8C69 0%, #FFB4A0 100%);
+  color: white;
+  border: none;
+  border-radius: 12px;
+  padding: 0.75rem 1.25rem;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  flex-shrink: 0;
+}
+
+.select-child-button:hover {
+  background: linear-gradient(135deg, #E67C5F 0%, #FF9F87 100%);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(255, 140, 105, 0.3);
+}
+
+/* 자녀 추가 버튼 */
+.add-child-section {
+  text-align: center;
+  margin: 2rem 0;
+}
+
+.add-child-button {
+  background: white;
+  border: 2px dashed #FF8C69;
+  border-radius: 16px;
+  padding: 1.25rem 2rem;
+  font-size: 1rem;
+  font-weight: 600;
+  color: #FF8C69;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.add-child-button:hover {
+  background: #FFF8F6;
+  border-style: solid;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 15px rgba(255, 140, 105, 0.2);
+}
+
+/* 새 자녀 추가 폼 */
+.add-child-form {
+  background: white;
+  border-radius: 20px;
+  padding: 2rem;
+  box-shadow: 0 8px 32px rgba(255, 140, 105, 0.1);
+  border: 1px solid #F0F0F0;
+  margin-top: 1.5rem;
+}
+
+.add-child-form .form-title {
+  color: #3D2C2C;
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin-bottom: 1.5rem;
+  text-align: center;
+}
+
+/* 폼 버튼 영역 */
+.form-buttons {
+  display: flex;
+  gap: 1rem;
+  margin-top: 2rem;
+}
+
+.form-button.secondary {
+  background: white;
+  border: 2px solid #E0E0E0;
+  color: #666;
+}
+
+.form-button.secondary:hover {
+  border-color: #C0C0C0;
+  background: #F8F8F8;
+}
+
+/* 반응형 디자인 */
+@media (max-width: 768px) {
+  .children-grid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  .child-card {
+    padding: 1.25rem;
+  }
+
+  .form-buttons {
+    flex-direction: column;
+  }
+
+  .add-child-button {
+    padding: 1rem 1.5rem;
+    font-size: 0.95rem;
+  }
 }
