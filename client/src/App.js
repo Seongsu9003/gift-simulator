@@ -104,48 +104,62 @@ function App() {
   // 로그인하지 않은 경우
   if (!user) {
     return (
-      <div className="app">
-        {/* 헤더 */}
-        <header className="app-header">
-          <div className="container">
+      <div className="landing-page">
+        <div className="landing-container">
+          {/* 왼쪽 히어로 영역 */}
+          <div className="hero-section">
             <div className="hero-content">
-              <div className="hero-icon">👶💛🧑‍💼</div>
-              <h1 className="app-title">우리 아이가 서른 살이 된다면? 🌱</h1>
-              <p className="app-subtitle">지금 시작하는 증여 한 번이 아이의 30년을 바꿉니다</p>
+              {/* 성장 타임라인 이모지 */}
+              <div className="growth-timeline">
+                <span className="timeline-item">👶</span>
+                <span className="timeline-arrow">→</span>
+                <span className="timeline-item">🧒</span>
+                <span className="timeline-arrow">→</span>
+                <span className="timeline-item">🧑</span>
+                <span className="timeline-arrow">→</span>
+                <span className="timeline-item">🎓</span>
+              </div>
 
+              {/* 메인 카피 */}
+              <h1 className="hero-title">우리 아이가 서른 살이 되면</h1>
+              <p className="hero-subtitle">
+                지금 시작하는 증여 한 번이<br />
+                아이의 30년을 바꿉니다
+              </p>
+
+              {/* 핵심 가치 뱃지 */}
               <div className="hero-badges">
-                <div className="badge">
-                  <span className="badge-icon">📊</span>
-                  <span className="badge-text">10년 단위 면세 한도 활용</span>
-                </div>
-                <div className="badge">
-                  <span className="badge-icon">📈</span>
-                  <span className="badge-text">복리 효과로 자산 증식</span>
-                </div>
-                <div className="badge">
-                  <span className="badge-icon">🎯</span>
-                  <span className="badge-text">30년 증여 플랜 자동 생성</span>
-                </div>
+                <div className="hero-badge">📊 10년 단위 면세 활용</div>
+                <div className="hero-badge">📈 복리 효과 자산 증식</div>
+                <div className="hero-badge">🎯 30년 플랜 자동 생성</div>
               </div>
             </div>
           </div>
-        </header>
 
-        {/* 로그인 화면 */}
-        <main className="main-content">
-          <div className="container">
-            <Login />
+          {/* 오른쪽 로그인 영역 */}
+          <div className="login-section">
+            <div className="login-content">
+              <div className="login-icon">👨‍👩‍👧💛</div>
+              <h2 className="login-title">시작하기</h2>
+              <p className="login-description">
+                Google 계정으로 로그인하고<br />
+                우리 아이만의 증여 플랜을 만들어보세요
+              </p>
+
+              <div className="login-form">
+                <Login />
+              </div>
+
+              <p className="login-security">🔒 개인정보는 안전하게 보호됩니다</p>
+            </div>
           </div>
-        </main>
+        </div>
 
-        {/* 푸터 */}
-        <footer className="app-footer">
-          <div className="container">
+        {/* 푸터 (모바일에서만 표시) */}
+        <footer className="landing-footer">
+          <div className="footer-content">
             <p className="footer-disclaimer">
               ⚠️ 본 시뮬레이션 결과는 참고용이며, 실제 세무 신고 및 투자 결과와 다를 수 있습니다.
-            </p>
-            <p className="footer-copyright">
-              © 2026 증여 시뮬레이터. Made with ❤️ for financial planning.
             </p>
           </div>
         </footer>
