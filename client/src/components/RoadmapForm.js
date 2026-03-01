@@ -1,11 +1,18 @@
 import React, { useState, useEffect } from 'react';
+import { addCommas, parseNumericValue, convertToKoreanCurrency } from '../utils/formatCurrency';
 
 // 30년 증여 로드맵 컴포넌트
 function RoadmapForm({ childInfo }) {
-  // 폼 상태
+  // 폼 상태 (실제 숫자 값)
   const [formData, setFormData] = useState({
     childBirthDate: '',
     relationship: 'child',
+    existingGiftAmount: '',
+    monthlyInvestment: ''
+  });
+
+  // 표시용 포맷된 값들
+  const [displayValues, setDisplayValues] = useState({
     existingGiftAmount: '',
     monthlyInvestment: ''
   });
@@ -43,12 +50,32 @@ function RoadmapForm({ childInfo }) {
     }
   }, [childInfo]);
 
-  // 입력값 변경 처리
+  // 일반 입력값 변경 처리 (relationship 등)
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData(prev => ({
       ...prev,
       [name]: value
+    }));
+  };
+
+  // 금액 입력값 변경 처리 (콤마 표시 + 실제 숫자 값 저장)
+  const handleAmountChange = (e) => {
+    const { name, value } = e.target;
+
+    // 숫자만 추출
+    const numericValue = parseNumericValue(value);
+
+    // 실제 숫자 값 저장
+    setFormData(prev => ({
+      ...prev,
+      [name]: numericValue.toString()
+    }));
+
+    // 표시용 포맷된 값 저장
+    setDisplayValues(prev => ({
+      ...prev,
+      [name]: addCommas(numericValue)
     }));
   };
 
@@ -255,15 +282,25 @@ function RoadmapForm({ childInfo }) {
               현재까지 증여한 금액 (원)
             </label>
             <input
-              type="number"
+              type="text"
               id="existingGiftAmount"
               name="existingGiftAmount"
               className="form-input"
-              value={formData.existingGiftAmount}
-              onChange={handleInputChange}
+              value={displayValues.existingGiftAmount}
+              onChange={handleAmountChange}
               placeholder="없으면 0을 입력하세요"
-              min="0"
+              inputMode="numeric"
             />
+            {displayValues.existingGiftAmount && (
+              <div className="amount-korean" style={{
+                color: '#FF8C69',
+                fontSize: '14px',
+                marginTop: '4px',
+                fontWeight: '500'
+              }}>
+                {convertToKoreanCurrency(formData.existingGiftAmount)}
+              </div>
+            )}
             <small style={{ color: '#6c757d', fontSize: '0.875rem' }}>
               현재 10년 구간에서 이미 증여한 금액을 입력하세요
             </small>
@@ -275,18 +312,26 @@ function RoadmapForm({ childInfo }) {
               월 적립 희망 금액 (원)
             </label>
             <input
-              type="number"
+              type="text"
               id="monthlyInvestment"
               name="monthlyInvestment"
               className="form-input"
-              value={formData.monthlyInvestment}
-              onChange={handleInputChange}
+              value={displayValues.monthlyInvestment}
+              onChange={handleAmountChange}
               placeholder="예: 100,000"
-              min="10000"
-              max="1000000"
-              step="10000"
+              inputMode="numeric"
               required
             />
+            {displayValues.monthlyInvestment && (
+              <div className="amount-korean" style={{
+                color: '#FF8C69',
+                fontSize: '14px',
+                marginTop: '4px',
+                fontWeight: '500'
+              }}>
+                {convertToKoreanCurrency(formData.monthlyInvestment)}
+              </div>
+            )}
             <small style={{ color: '#8B6F6F', fontSize: '0.875rem' }}>
               월 10만원부터 시작해도 30년 후 큰 차이가 생겨요 💛
             </small>
