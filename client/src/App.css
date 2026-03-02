@@ -1419,9 +1419,6 @@ body {
 /* 왼쪽 히어로 영역 - 50% */
 .hero-section {
   flex: 1;
-  background: #2C1810 url('/hero-baby.gif') center center;
-  background-size: cover;
-  background-repeat: no-repeat;
   display: flex;
   align-items: center;
   justify-content: center;
