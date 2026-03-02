@@ -1419,7 +1419,9 @@ body {
 /* 왼쪽 히어로 영역 - 50% */
 .hero-section {
   flex: 1;
-  background: linear-gradient(135deg, #FF8C69 0%, #FFB088 100%);
+  background: #2C1810 url('/hero-baby.gif') center center;
+  background-size: cover;
+  background-repeat: no-repeat;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -1428,14 +1430,14 @@ body {
   overflow: hidden;
 }
 
-.hero-section::before {
-  content: '';
+/* 반투명 오버레이 */
+.hero-overlay {
   position: absolute;
   top: 0;
   left: 0;
   right: 0;
   bottom: 0;
-  background: linear-gradient(135deg, rgba(255, 140, 105, 0.1) 0%, rgba(255, 176, 136, 0.1) 100%);
+  background: rgba(0, 0, 0, 0.35);
   z-index: 1;
 }
 
@@ -1474,7 +1476,8 @@ body {
   font-weight: 700;
   line-height: 1.3;
   margin-bottom: 1rem;
-  text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  text-shadow: 0 2px 8px rgba(0,0,0,0.3);
+  color: #FFFFFF;
 }
 
 .hero-subtitle {
@@ -1482,6 +1485,8 @@ body {
   line-height: 1.5;
   margin-bottom: 2rem;
   opacity: 0.9;
+  color: #FFFFFF;
+  text-shadow: 0 2px 8px rgba(0,0,0,0.3);
 }
 
 /* 핵심 가치 뱃지 */
@@ -1493,19 +1498,21 @@ body {
 }
 
 .hero-badge {
-  background: rgba(255, 255, 255, 0.2);
-  backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.3);
+  background: rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(4px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
   border-radius: 20px;
   padding: 0.5rem 1rem;
   font-size: 0.8125rem;
   font-weight: 500;
   white-space: nowrap;
   transition: all 0.2s ease;
+  color: #FFFFFF;
+  text-shadow: 0 1px 4px rgba(0,0,0,0.3);
 }
 
 .hero-badge:hover {
-  background: rgba(255, 255, 255, 0.3);
+  background: rgba(255, 255, 255, 0.25);
   transform: translateY(-1px);
 }
 
@@ -1583,7 +1590,7 @@ body {
   }
 
   .hero-section {
-    min-height: 60vh;
+    min-height: 50vh;
     padding: 3rem 1rem 2rem 1rem;
   }
 
@@ -1600,11 +1607,11 @@ body {
   }
 
   .hero-title {
-    font-size: 1.75rem;
+    font-size: 1.5rem;
   }
 
   .hero-subtitle {
-    font-size: 0.95rem;
+    font-size: 0.875rem;
   }
 
   .hero-badges {
@@ -1660,7 +1667,7 @@ body {
   }
 
   .hero-title {
-    font-size: 1.5rem;
+    font-size: 1.25rem;
   }
 
   .hero-badges {

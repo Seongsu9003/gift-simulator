@@ -108,18 +108,10 @@ function App() {
         <div className="landing-container">
           {/* 왼쪽 히어로 영역 */}
           <div className="hero-section">
-            <div className="hero-content">
-              {/* 성장 타임라인 이모지 */}
-              <div className="growth-timeline">
-                <span className="timeline-item">👶</span>
-                <span className="timeline-arrow">→</span>
-                <span className="timeline-item">🧒</span>
-                <span className="timeline-arrow">→</span>
-                <span className="timeline-item">🧑</span>
-                <span className="timeline-arrow">→</span>
-                <span className="timeline-item">🎓</span>
-              </div>
+            {/* 반투명 오버레이 */}
+            <div className="hero-overlay"></div>
 
+            <div className="hero-content">
               {/* 메인 카피 */}
               <h1 className="hero-title">우리 아이가 서른 살이 되면</h1>
               <p className="hero-subtitle">
