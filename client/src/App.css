@@ -1428,8 +1428,8 @@ body {
   background-color: #2C1810;
 }
 
-/* GIF 배경 이미지 - img 태그로 애니메이션 재생 보장 */
-.hero-bg-gif {
+/* 배경 영상 (MP4) */
+.hero-bg-video {
   position: absolute;
   top: 50%;
   left: 50%;

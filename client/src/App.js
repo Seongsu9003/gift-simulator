@@ -108,12 +108,17 @@ function App() {
         <div className="landing-container">
           {/* 왼쪽 히어로 영역 */}
           <div className="hero-section">
-            {/* GIF 배경 이미지 - img 태그로 애니메이션 재생 보장 */}
-            <img
-              src={`${process.env.PUBLIC_URL}/hero-baby.gif`}
-              alt="아기 히어로 이미지"
-              className="hero-bg-gif"
-            />
+            {/* 배경 영상 - MP4로 변환하여 용량 최적화 (12MB→900KB) */}
+            <video
+              className="hero-bg-video"
+              autoPlay
+              loop
+              muted
+              playsInline
+              preload="auto"
+            >
+              <source src={`${process.env.PUBLIC_URL}/hero-baby.mp4`} type="video/mp4" />
+            </video>
             {/* 반투명 오버레이 */}
             <div className="hero-overlay"></div>
 
