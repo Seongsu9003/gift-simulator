@@ -1425,6 +1425,21 @@ body {
   padding: 2rem;
   position: relative;
   overflow: hidden;
+  background-color: #2C1810;
+}
+
+/* GIF 배경 이미지 - img 태그로 애니메이션 재생 보장 */
+.hero-bg-gif {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  min-width: 100%;
+  min-height: 100%;
+  width: auto;
+  height: auto;
+  object-fit: cover;
+  z-index: 0;
 }
 
 /* 반투명 오버레이 */

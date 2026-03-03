@@ -107,16 +107,13 @@ function App() {
       <div className="landing-page">
         <div className="landing-container">
           {/* 왼쪽 히어로 영역 */}
-          <div
-            className="hero-section"
-            style={{
-              backgroundImage: `url(${process.env.PUBLIC_URL}/hero-baby.gif)`,
-              backgroundSize: 'cover',
-              backgroundPosition: 'center center',
-              backgroundRepeat: 'no-repeat',
-              backgroundColor: '#2C1810'
-            }}
-          >
+          <div className="hero-section">
+            {/* GIF 배경 이미지 - img 태그로 애니메이션 재생 보장 */}
+            <img
+              src={`${process.env.PUBLIC_URL}/hero-baby.gif`}
+              alt="아기 히어로 이미지"
+              className="hero-bg-gif"
+            />
             {/* 반투명 오버레이 */}
             <div className="hero-overlay"></div>
 
