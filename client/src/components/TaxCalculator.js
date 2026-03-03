@@ -124,7 +124,7 @@ function TaxCalculator() {
           면제 한도 사용률
           {isExceeded && (
             <div style={{ color: '#dc3545', fontWeight: 'bold', marginTop: '0.25rem' }}>
-              ⚠️ 한도 초과
+              한도 초과
             </div>
           )}
         </div>
@@ -136,7 +136,7 @@ function TaxCalculator() {
     <div className="tax-calculator-container">
       {/* 입력 폼 */}
       <div className="form-container">
-        <h2 className="form-title">💰 세금 계산해보기</h2>
+        <h2 className="form-title">예상 증여세 계산</h2>
 
         <form onSubmit={handleSubmit}>
           {/* 증여 금액 */}
@@ -244,7 +244,7 @@ function TaxCalculator() {
         <div className="result-container">
           {/* 면제 한도 사용률 게이지 */}
           <div className="result-card">
-            <h3 className="result-title">📊 면제 한도 현황</h3>
+            <h3 className="result-title">면제 한도 현황</h3>
             <ExemptionGauge
               usageRate={results.exemptionUsageRate}
               isExceeded={results.isExemptionExceeded}
@@ -258,7 +258,7 @@ function TaxCalculator() {
 
           {/* 증여 정보 */}
           <div className="result-card">
-            <h3 className="result-title">📋 증여 정보</h3>
+            <h3 className="result-title">증여 정보</h3>
             <div className="result-item">
               <span className="result-label">증여 금액</span>
               <span className="result-value" style={{ fontWeight: 'bold', fontSize: '1.1rem' }}>
@@ -280,7 +280,7 @@ function TaxCalculator() {
 
           {/* 세금 계산 결과 */}
           <div className="result-card">
-            <h3 className="result-title">💳 세금 계산 결과</h3>
+            <h3 className="result-title">세금 계산 결과</h3>
             <div className="result-item">
               <span className="result-label">기존 누적 증여액</span>
               <span className="result-value">{formatCurrency(results.accumulatedGiftAmount)}</span>
@@ -332,7 +332,7 @@ function TaxCalculator() {
 
           {/* 세율 정보 */}
           <div className="info-box">
-            <h4 style={{ margin: '0 0 0.5rem 0', color: '#3D2C2C' }}>📈 증여세율 정보</h4>
+            <h4 style={{ margin: '0 0 0.5rem 0', color: '#3D2C2C' }}>증여세율 정보</h4>
             <div style={{ color: '#3D2C2C', fontSize: '0.9rem' }}>
               <p style={{ margin: '0.25rem 0' }}>• 면제 한도 초과분에 대해 누진세율 적용</p>
               <p style={{ margin: '0.25rem 0' }}>• 1억원 이하: 10% / 1~5억원: 20% / 5~10억원: 30%</p>
@@ -348,7 +348,7 @@ function TaxCalculator() {
               fontWeight: 'bold',
               fontSize: '0.95rem'
             }}>
-              ⚠️ 본 결과는 참고용이며 실제 세무 신고와 다를 수 있습니다
+              본 결과는 참고용이며 실제 세무 신고와 다를 수 있습니다
             </p>
             <p style={{
               margin: '0.5rem 0 0 0',

@@ -113,7 +113,7 @@ function Simulator() {
     <div className="simulator-container">
       {/* 입력 폼 */}
       <div className="form-container">
-        <h2 className="form-title">📈 수익률 확인하기</h2>
+        <h2 className="form-title">투자시뮬레이션</h2>
 
         <form onSubmit={handleSubmit}>
           {/* 월 적립액 슬라이더 */}
@@ -172,7 +172,7 @@ function Simulator() {
 
           {/* 투자 정보 미리보기 */}
           <div className="info-box">
-            <h4 style={{ margin: '0 0 0.75rem 0', color: '#3D2C2C' }}>💡 투자 정보</h4>
+            <h4 style={{ margin: '0 0 0.75rem 0', color: '#3D2C2C' }}>투자 정보</h4>
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.5rem', fontSize: '0.9rem' }}>
               <div>
                 <strong>연 수익률:</strong> 10.23% (고정)
@@ -212,7 +212,7 @@ function Simulator() {
         <div className="result-container">
           {/* 투자 요약 */}
           <div className="result-card">
-            <h3 className="result-title">🎯 투자 요약</h3>
+            <h3 className="result-title">투자 요약</h3>
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '1rem' }}>
               <div style={{
                 textAlign: 'center',
@@ -271,7 +271,7 @@ function Simulator() {
 
           {/* 수익률 차트 */}
           <div className="result-card">
-            <h3 className="result-title">📊 연도별 자산 성장 차트</h3>
+            <h3 className="result-title">연도별 자산 성장 차트</h3>
             <div style={{ width: '100%', height: '400px', marginTop: '1rem' }}>
               <ResponsiveContainer width="100%" height="100%">
                 <LineChart
@@ -320,7 +320,7 @@ function Simulator() {
 
           {/* 연도별 상세 데이터 (일부) */}
           <div className="result-card">
-            <h3 className="result-title">📅 주요 구간별 상세 정보</h3>
+            <h3 className="result-title">주요 구간별 상세 정보</h3>
             <div style={{ overflowX: 'auto' }}>
               <table style={{
                 width: '100%',
@@ -361,7 +361,7 @@ function Simulator() {
 
           {/* 안내 사항 */}
           <div className="info-box">
-            <h4 style={{ margin: '0 0 0.5rem 0', color: '#3D2C2C' }}>💡 시뮬레이션 안내</h4>
+            <h4 style={{ margin: '0 0 0.5rem 0', color: '#3D2C2C' }}>시뮬레이션 안내</h4>
             <ul style={{ margin: 0, paddingLeft: '1.5rem', color: '#3D2C2C' }}>
               <li>연 수익률 10.23%는 역사적 S&P 500 평균 기준입니다</li>
               <li>실제 투자 수익률은 시장 상황에 따라 변동될 수 있습니다</li>
@@ -378,7 +378,7 @@ function Simulator() {
               fontWeight: 'bold',
               fontSize: '0.95rem'
             }}>
-              ⚠️ 본 결과는 참고용이며 실제 투자 결과와 다를 수 있습니다
+              본 결과는 참고용이며 실제 투자 결과와 다를 수 있습니다
             </p>
             <p style={{
               margin: '0.5rem 0 0 0',

@@ -183,25 +183,25 @@ function RoadmapForm({ childInfo }) {
   // 연령대별 이모지 아이콘
   const getAgeIcon = (ageCategory) => {
     if (ageCategory.includes('미성년')) {
-      if (ageCategory.includes('0-10')) return '👶';
-      return '🧒';
+      if (ageCategory.includes('0-10')) return '';
+      return '';
     }
-    return '🧑';
+    return '';
   };
 
   return (
     <div className="roadmap-container">
       {/* 입력 폼 */}
       <div className="form-container">
-        <h2 className="form-title">📊 내 아이 증여 플랜 만들기</h2>
+        <h2 className="form-title">내 아이 씨드머니 계획 만들기</h2>
 
         <form onSubmit={handleSubmit}>
           {/* 자동 입력된 자녀 정보 안내 */}
           {childInfo && (
             <div className="auto-filled-notice">
-              <span className="notice-icon">✨</span>
+              <span className="notice-icon"></span>
               <span className="notice-text">
-                {childInfo.name}이의 정보로 자동 입력되었어요 (변경하려면 프로필에서 수정해주세요)
+                {childInfo.name}님의 정보로 자동 입력되었어요 (변경하려면 프로필에서 수정해주세요)
               </span>
             </div>
           )}
@@ -261,7 +261,7 @@ function RoadmapForm({ childInfo }) {
           {/* 관계 선택 */}
           <div className="form-group">
             <label htmlFor="relationship" className="form-label">
-              자녀와의 관계
+              관계
             </label>
             <select
               id="relationship"
@@ -279,7 +279,7 @@ function RoadmapForm({ childInfo }) {
           {/* 기존 증여액 */}
           <div className="form-group">
             <label htmlFor="existingGiftAmount" className="form-label">
-              현재까지 증여한 금액 (원)
+              홈택스 증여신고금액 (원)
             </label>
             <input
               type="text"
@@ -302,7 +302,7 @@ function RoadmapForm({ childInfo }) {
               </div>
             )}
             <small style={{ color: '#6c757d', fontSize: '0.875rem' }}>
-              현재 10년 구간에서 이미 증여한 금액을 입력하세요
+              현재 10년 구간에서 홈택스에 증여신고한 금액을 입력하세요
             </small>
           </div>
 
@@ -333,7 +333,7 @@ function RoadmapForm({ childInfo }) {
               </div>
             )}
             <small style={{ color: '#8B6F6F', fontSize: '0.875rem' }}>
-              월 10만원부터 시작해도 30년 후 큰 차이가 생겨요 💛
+              월 10만원부터 시작해도 30년 후 큰 차이가 생겨요
             </small>
           </div>
 
@@ -360,7 +360,7 @@ function RoadmapForm({ childInfo }) {
         <div className="result-container">
           {/* 자녀 정보 */}
           <div className="result-card">
-            <h3 className="result-title">👶 자녀 정보</h3>
+            <h3 className="result-title">자녀 정보</h3>
             <div className="result-item">
               <span className="result-label">현재 나이</span>
               <span className="result-value">{results.childInfo.currentAge}세</span>
@@ -380,7 +380,7 @@ function RoadmapForm({ childInfo }) {
           {/* 요약 메시지 */}
           <div className="highlight-box">
             <h3 style={{ margin: '0 0 0.5rem 0', color: '#FF8C69', fontWeight: 'bold', fontSize: '1.1rem' }}>
-              🎉 30년간 총 {formatCurrency(results.planSummary.totalRecommendedGift)}을 면세로 증여할 수 있어요!
+              30년간 총 {formatCurrency(results.planSummary.totalRecommendedGift)}을 면세로 증여할 수 있어요!
             </h3>
             <p style={{ margin: 0, color: '#8B6F6F', fontSize: '0.95rem' }}>
               절세 효과: <span className="text-success">{formatCurrency(results.planSummary.totalTaxSavings)}</span>
@@ -389,7 +389,7 @@ function RoadmapForm({ childInfo }) {
 
           {/* 30년 계획 요약 */}
           <div className="result-card">
-            <h3 className="result-title">📋 30년 계획 요약</h3>
+            <h3 className="result-title">30년 계획 요약</h3>
             <div className="result-item">
               <span className="result-label">총 추천 증여액</span>
               <span className="result-value text-success">
@@ -418,7 +418,7 @@ function RoadmapForm({ childInfo }) {
 
           {/* 구간별 상세 계획 */}
           <div className="result-card">
-            <h3 className="result-title">📅 구간별 상세 계획</h3>
+            <h3 className="result-title">구간별 상세 계획</h3>
 
             {results.roadmapPeriods.map((period, index) => (
               <div key={index} className="period-card" style={{
@@ -475,7 +475,7 @@ function RoadmapForm({ childInfo }) {
 
           {/* 안내 메시지 */}
           <div className="info-box">
-            <h4 style={{ margin: '0 0 0.5rem 0', color: '#3D2C2C' }}>💡 안내사항</h4>
+            <h4 style={{ margin: '0 0 0.5rem 0', color: '#3D2C2C' }}>안내사항</h4>
             <ul style={{ margin: 0, paddingLeft: '1.5rem', color: '#3D2C2C' }}>
               <li>증여세 면제 한도는 10년 단위로 적용됩니다</li>
               <li>미성년 자녀는 2,000만원, 성인 자녀는 5,000만원까지 면세</li>

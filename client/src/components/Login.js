@@ -25,7 +25,7 @@ function Login() {
     <div className="login-container">
       <div className="login-card">
         <div className="login-content">
-          <div className="login-icon">👶💛👨‍👩‍👧‍👦</div>
+          <div className="login-icon"></div>
 
           <h2 className="login-title">시작하기</h2>
           <p className="login-subtitle">
@@ -60,7 +60,7 @@ function Login() {
           )}
 
           <div className="login-notice">
-            <p>🔒 개인정보는 안전하게 보호됩니다</p>
+            <p>개인정보는 안전하게 보호됩니다</p>
             <p>로그인 후 자녀 정보를 입력하면 맞춤형 증여 플랜을 제공해드려요</p>
           </div>
         </div>

@@ -11,6 +11,7 @@ function StepWizard({ childInfo }) {
     childBirthDate: childInfo?.birthDate || '',
     relationship: childInfo?.relationship || 'child',
     existingGiftAmount: '',
+    hasExistingGift: null,
     monthlyInvestment: '',
 
     // API 응답 데이터 저장
@@ -22,9 +23,9 @@ function StepWizard({ childInfo }) {
   // 스텝 정의
   const steps = [
     { id: 1, title: '자녀 정보', description: '기본 정보 입력' },
-    { id: 2, title: '증여 플랜', description: '30년 로드맵' },
-    { id: 3, title: '세금 계산', description: '증여세 계산' },
-    { id: 4, title: '수익률 계산', description: '투자 시뮬레이션' }
+    { id: 2, title: '씨드머니 계획', description: '30년 로드맵' },
+    { id: 3, title: '예상 증여세 계산', description: '증여세 계산' },
+    { id: 4, title: '투자시뮬레이션', description: '투자 시뮬레이션' }
   ];
 
   // 스텝 이동 함수
@@ -55,6 +56,7 @@ function StepWizard({ childInfo }) {
       childBirthDate: childInfo?.birthDate || '',
       relationship: childInfo?.relationship || 'child',
       existingGiftAmount: '',
+      hasExistingGift: null,
       monthlyInvestment: '',
       roadmapResults: null,
       taxResults: null,
@@ -300,9 +302,9 @@ function Step1ChildInfo({ childInfo, wizardData, updateWizardData, onNext }) {
         {/* 자동 입력된 자녀 정보 안내 */}
         {childInfo && (
           <div className="auto-filled-notice">
-            <span className="notice-icon">✨</span>
+            <span className="notice-icon"></span>
             <span className="notice-text">
-              {childInfo.name}이의 정보로 자동 입력되었어요
+              {childInfo.name}님의 정보로 자동 입력되었어요
             </span>
           </div>
         )}
@@ -362,7 +364,7 @@ function Step1ChildInfo({ childInfo, wizardData, updateWizardData, onNext }) {
         {/* 관계 선택 */}
         <div className="form-group">
           <label className="form-label">
-            자녀와의 관계
+            관계
           </label>
           <select
             className={`form-select ${childInfo ? 'readonly' : ''}`}
@@ -378,18 +380,65 @@ function Step1ChildInfo({ childInfo, wizardData, updateWizardData, onNext }) {
         {/* 기존 증여액 */}
         <div className="form-group">
           <label className="form-label">
-            현재까지 증여한 금액 (원)
+            홈택스 증여신고금액 (원)
           </label>
-          <input
-            type="number"
-            className="form-input"
-            value={wizardData.existingGiftAmount}
-            onChange={(e) => handleInputChange('existingGiftAmount', e.target.value)}
-            placeholder="없으면 0을 입력하세요"
-            min="0"
-          />
+          <div className="toggle-buttons" style={{ display: 'flex', gap: '0.75rem', marginBottom: '0.75rem' }}>
+            <button
+              type="button"
+              className={`toggle-button ${wizardData.hasExistingGift === true ? 'selected' : ''}`}
+              onClick={() => {
+                handleInputChange('hasExistingGift', true);
+              }}
+              style={{
+                flex: 1,
+                padding: '0.75rem',
+                borderRadius: '12px',
+                border: wizardData.hasExistingGift === true ? '2px solid #FF8C69' : '2px solid #E5E7EB',
+                background: wizardData.hasExistingGift === true ? '#FFF5F3' : 'white',
+                color: wizardData.hasExistingGift === true ? '#FF8C69' : '#6B7280',
+                fontWeight: 600,
+                fontSize: '0.95rem',
+                cursor: 'pointer',
+                transition: 'all 0.2s ease'
+              }}
+            >
+              있어요
+            </button>
+            <button
+              type="button"
+              className={`toggle-button ${wizardData.hasExistingGift === false ? 'selected' : ''}`}
+              onClick={() => {
+                handleInputChange('hasExistingGift', false);
+                handleInputChange('existingGiftAmount', '0');
+              }}
+              style={{
+                flex: 1,
+                padding: '0.75rem',
+                borderRadius: '12px',
+                border: wizardData.hasExistingGift === false ? '2px solid #FF8C69' : '2px solid #E5E7EB',
+                background: wizardData.hasExistingGift === false ? '#FFF5F3' : 'white',
+                color: wizardData.hasExistingGift === false ? '#FF8C69' : '#6B7280',
+                fontWeight: 600,
+                fontSize: '0.95rem',
+                cursor: 'pointer',
+                transition: 'all 0.2s ease'
+              }}
+            >
+              없어요
+            </button>
+          </div>
+          {wizardData.hasExistingGift === true && (
+            <input
+              type="number"
+              className="form-input"
+              value={wizardData.existingGiftAmount}
+              onChange={(e) => handleInputChange('existingGiftAmount', e.target.value)}
+              placeholder="증여신고한 금액을 입력하세요"
+              min="0"
+            />
+          )}
           <small style={{ color: '#6c757d', fontSize: '0.875rem' }}>
-            현재 10년 구간에서 이미 증여한 금액을 입력하세요
+            현재 10년 구간에서 홈택스에 증여신고한 금액을 입력하세요
           </small>
         </div>
 
@@ -410,7 +459,7 @@ function Step1ChildInfo({ childInfo, wizardData, updateWizardData, onNext }) {
             required
           />
           <small style={{ color: '#8B6F6F', fontSize: '0.875rem' }}>
-            월 10만원부터 시작해도 30년 후 큰 차이가 생겨요 💛
+            월 10만원부터 시작해도 30년 후 큰 차이가 생겨요
           </small>
         </div>
       </div>
@@ -481,10 +530,10 @@ function Step2Roadmap({ wizardData, updateWizardData, onNext }) {
   // 연령대별 이모지 아이콘
   const getAgeIcon = (ageCategory) => {
     if (ageCategory.includes('미성년')) {
-      if (ageCategory.includes('0-10')) return '👶';
-      return '🧒';
+      if (ageCategory.includes('0-10')) return '';
+      return '';
     }
-    return '🧑';
+    return '';
   };
 
   if (loading) {
@@ -494,8 +543,8 @@ function Step2Roadmap({ wizardData, updateWizardData, onNext }) {
           <h2 className="step-title">30년 증여 플랜 생성 중...</h2>
         </div>
         <div className="loading-content">
-          <div className="loading-icon">⏳</div>
-          <p>잠시만 기다려주세요 ✨</p>
+          <div className="loading-icon"></div>
+          <p>잠시만 기다려주세요</p>
         </div>
       </div>
     );
@@ -537,7 +586,7 @@ function Step2Roadmap({ wizardData, updateWizardData, onNext }) {
           {/* 요약 메시지 */}
           <div className="highlight-box">
             <h3 style={{ margin: '0 0 0.5rem 0', color: '#FF8C69', fontWeight: 'bold', fontSize: '1.1rem' }}>
-              🎉 30년간 총 {formatCurrency(results.planSummary.totalRecommendedGift)}을 면세로 증여할 수 있어요!
+              30년간 총 {formatCurrency(results.planSummary.totalRecommendedGift)}을 면세로 증여할 수 있어요!
             </h3>
             <p style={{ margin: 0, color: '#8B6F6F', fontSize: '0.95rem' }}>
               절세 효과: <span className="text-success">{formatCurrency(results.planSummary.totalTaxSavings)}</span>
@@ -546,7 +595,7 @@ function Step2Roadmap({ wizardData, updateWizardData, onNext }) {
 
           {/* 30년 계획 요약 */}
           <div className="result-card">
-            <h3 className="result-title">📋 30년 계획 요약</h3>
+            <h3 className="result-title">30년 계획 요약</h3>
             <div className="result-item">
               <span className="result-label">총 추천 증여액</span>
               <span className="result-value text-success">
@@ -575,7 +624,7 @@ function Step2Roadmap({ wizardData, updateWizardData, onNext }) {
 
           {/* 구간별 상세 계획 */}
           <div className="result-card">
-            <h3 className="result-title">📅 구간별 상세 계획</h3>
+            <h3 className="result-title">구간별 상세 계획</h3>
 
             {results.roadmapPeriods.map((period, index) => (
               <div key={index} className="period-card" style={{
@@ -762,7 +811,7 @@ function Step3TaxCalculation({ wizardData, updateWizardData, onNext }) {
           면제 한도 사용률
           {isExceeded && (
             <div style={{ color: '#dc3545', fontWeight: 'bold', marginTop: '0.25rem' }}>
-              ⚠️ 한도 초과
+              한도 초과
             </div>
           )}
         </div>
@@ -777,8 +826,8 @@ function Step3TaxCalculation({ wizardData, updateWizardData, onNext }) {
           <h2 className="step-title">증여세 계산 중...</h2>
         </div>
         <div className="loading-content">
-          <div className="loading-icon">⏳</div>
-          <p>잠시만 기다려주세요 ✨</p>
+          <div className="loading-icon"></div>
+          <p>잠시만 기다려주세요</p>
         </div>
       </div>
     );
@@ -819,7 +868,7 @@ function Step3TaxCalculation({ wizardData, updateWizardData, onNext }) {
         <div className="result-container">
           {/* 면제 한도 사용률 게이지 */}
           <div className="result-card">
-            <h3 className="result-title">📊 면제 한도 현황</h3>
+            <h3 className="result-title">면제 한도 현황</h3>
             <ExemptionGauge
               usageRate={results.exemptionUsageRate}
               isExceeded={results.isExemptionExceeded}
@@ -833,7 +882,7 @@ function Step3TaxCalculation({ wizardData, updateWizardData, onNext }) {
 
           {/* 증여 정보 */}
           <div className="result-card">
-            <h3 className="result-title">📋 증여 정보</h3>
+            <h3 className="result-title">증여 정보</h3>
             <div className="result-item">
               <span className="result-label">증여 금액</span>
               <span className="result-value" style={{ fontWeight: 'bold', fontSize: '1.1rem' }}>
@@ -855,7 +904,7 @@ function Step3TaxCalculation({ wizardData, updateWizardData, onNext }) {
 
           {/* 세금 계산 결과 */}
           <div className="result-card">
-            <h3 className="result-title">💳 세금 계산 결과</h3>
+            <h3 className="result-title">세금 계산 결과</h3>
             <div className="result-item">
               <span className="result-label">기존 누적 증여액</span>
               <span className="result-value">{formatCurrency(results.accumulatedGiftAmount)}</span>
@@ -907,7 +956,7 @@ function Step3TaxCalculation({ wizardData, updateWizardData, onNext }) {
 
           {/* 세율 정보 */}
           <div className="info-box">
-            <h4 style={{ margin: '0 0 0.5rem 0', color: '#3D2C2C' }}>📈 증여세율 정보</h4>
+            <h4 style={{ margin: '0 0 0.5rem 0', color: '#3D2C2C' }}>증여세율 정보</h4>
             <div style={{ color: '#3D2C2C', fontSize: '0.9rem' }}>
               <p style={{ margin: '0.25rem 0' }}>• 면제 한도 초과분에 대해 누진세율 적용</p>
               <p style={{ margin: '0.25rem 0' }}>• 1억원 이하: 10% / 1~5억원: 20% / 5~10억원: 30%</p>
@@ -1026,8 +1075,8 @@ function Step4Simulator({ wizardData, updateWizardData }) {
           <h2 className="step-title">수익률 계산 중...</h2>
         </div>
         <div className="loading-content">
-          <div className="loading-icon">⏳</div>
-          <p>잠시만 기다려주세요 ✨</p>
+          <div className="loading-icon"></div>
+          <p>잠시만 기다려주세요</p>
         </div>
       </div>
     );
@@ -1162,7 +1211,7 @@ function Step4Simulator({ wizardData, updateWizardData }) {
             color: '#6B7280',
             lineHeight: '1.5'
           }}>
-            💡 기본 수익률 10.23%는 S&P 500 지수의 최근 30년 연평균 수익률입니다.
+            기본 수익률 10.23%는 S&P 500 지수의 최근 30년 연평균 수익률입니다.
             실제 투자 수익률은 시장 상황에 따라 달라질 수 있어요.
           </div>
         </div>
@@ -1172,7 +1221,7 @@ function Step4Simulator({ wizardData, updateWizardData }) {
         <div className="result-container">
           {/* 투자 요약 */}
           <div className="result-card">
-            <h3 className="result-title">🎯 30년 투자 요약</h3>
+            <h3 className="result-title">30년 투자 요약</h3>
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '1rem' }}>
               <div style={{
                 textAlign: 'center',
@@ -1231,7 +1280,7 @@ function Step4Simulator({ wizardData, updateWizardData }) {
 
           {/* 주요 구간별 상세 정보 */}
           <div className="result-card">
-            <h3 className="result-title">📅 주요 구간별 상세 정보</h3>
+            <h3 className="result-title">주요 구간별 상세 정보</h3>
             <div style={{ overflowX: 'auto' }}>
               <table style={{
                 width: '100%',
@@ -1273,20 +1322,20 @@ function Step4Simulator({ wizardData, updateWizardData }) {
           {/* 최종 결론 메시지 */}
           <div className="highlight-box">
             <h3 style={{ margin: '0 0 0.5rem 0', color: '#FF8C69', fontWeight: 'bold', fontSize: '1.2rem' }}>
-              🌟 축하해요! 모든 계산이 완료되었어요
+              축하해요! 모든 계산이 완료되었어요
             </h3>
             <p style={{ margin: '0.5rem 0', color: '#3D2C2C', fontSize: '1rem' }}>
               30년간 월 {formatCurrency(monthlyAmount)} 적립 시<br/>
               <strong>{formatCurrency(results.summary.finalAssets)}</strong>의 자산을 만들 수 있어요!
             </p>
             <p style={{ margin: '0.5rem 0 0 0', color: '#8B6F6F', fontSize: '0.9rem' }}>
-              지금 시작하면 우리 아이의 미래가 달라집니다 💛
+              지금 시작하면 우리 아이의 미래가 달라집니다
             </p>
           </div>
 
           {/* 안내 사항 */}
           <div className="info-box">
-            <h4 style={{ margin: '0 0 0.5rem 0', color: '#3D2C2C' }}>💡 시뮬레이션 안내</h4>
+            <h4 style={{ margin: '0 0 0.5rem 0', color: '#3D2C2C' }}>시뮬레이션 안내</h4>
             <ul style={{ margin: 0, paddingLeft: '1.5rem', color: '#3D2C2C' }}>
               <li>연 수익률 10.23%는 역사적 S&P 500 평균 기준입니다</li>
               <li>실제 투자 수익률은 시장 상황에 따라 변동될 수 있습니다</li>

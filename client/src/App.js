@@ -94,7 +94,7 @@ function App() {
     return (
       <div className="loading-screen">
         <div className="loading-content">
-          <div className="loading-icon">🌱</div>
+          <div className="loading-icon"></div>
           <p>로딩 중...</p>
         </div>
       </div>
@@ -132,9 +132,9 @@ function App() {
 
               {/* 핵심 가치 뱃지 */}
               <div className="hero-badges">
-                <div className="hero-badge">📊 10년 단위 면세 활용</div>
-                <div className="hero-badge">📈 복리 효과 자산 증식</div>
-                <div className="hero-badge">🎯 30년 플랜 자동 생성</div>
+                <div className="hero-badge">10년 단위 면세 활용</div>
+                <div className="hero-badge">복리 효과 자산 증식</div>
+                <div className="hero-badge">30년 플랜 자동 생성</div>
               </div>
             </div>
           </div>
@@ -151,7 +151,7 @@ function App() {
         <footer className="landing-footer">
           <div className="footer-content">
             <p className="footer-disclaimer">
-              ⚠️ 본 시뮬레이션 결과는 참고용이며, 실제 세무 신고 및 투자 결과와 다를 수 있습니다.
+              본 시뮬레이션 결과는 참고용이며, 실제 세무 신고 및 투자 결과와 다를 수 있습니다.
             </p>
           </div>
         </footer>
@@ -177,11 +177,11 @@ function App() {
             <div className="child-switcher-section">
               <button className="child-switcher-button" onClick={handleChildSwitcher}>
                 <span className="child-name">{childInfo?.name}</span>
-                <span className="child-emoji">{childInfo?.gender === 'male' ? '👦' : '👧'}</span>
+                <span className="child-emoji">{childInfo?.gender === 'male' ? 'M' : 'F'}</span>
                 <span className="dropdown-icon">▼</span>
               </button>
               <h1 className="child-title">
-                {childInfo?.name}이의 증여 플랜 💛
+                {childInfo?.name}님의 씨드머니 계획
               </h1>
             </div>
             <button className="logout-button" onClick={handleLogout}>
@@ -198,10 +198,10 @@ function App() {
       <footer className="app-footer">
         <div className="container">
           <p className="footer-disclaimer">
-            ⚠️ 본 시뮬레이션 결과는 참고용이며, 실제 세무 신고 및 투자 결과와 다를 수 있습니다.
+            본 시뮬레이션 결과는 참고용이며, 실제 세무 신고 및 투자 결과와 다를 수 있습니다.
           </p>
           <p className="footer-copyright">
-            © 2026 증여 시뮬레이터. Made with ❤️ for financial planning.
+            © 2026 증여 시뮬레이터.
           </p>
         </div>
       </footer>

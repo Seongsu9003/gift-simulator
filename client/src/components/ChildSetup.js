@@ -190,7 +190,7 @@ function ChildSetup({ onChildSelected }) {
       <div className="child-setup-container">
         <div className="container">
           <div className="loading-content">
-            <div className="loading-icon">🌱</div>
+            <div className="loading-icon"></div>
             <p>자녀 정보를 불러오는 중...</p>
           </div>
         </div>
@@ -203,7 +203,7 @@ function ChildSetup({ onChildSelected }) {
       <div className="container">
         {/* 헤더 */}
         <div className="setup-header">
-          <div className="setup-icon">👶💛</div>
+          <div className="setup-icon"></div>
           <h2 className="setup-title">
             {children.length === 0 ? '우리 아이 정보 입력' : '자녀 선택'}
           </h2>
@@ -226,11 +226,11 @@ function ChildSetup({ onChildSelected }) {
                     <div className="child-header">
                       <span className="child-name">{child.name}</span>
                       <span className="child-gender">
-                        {child.gender === 'male' ? '👦' : '👧'}
+                        {child.gender === 'male' ? 'M' : 'F'}
                       </span>
                     </div>
                     <div className="child-details">
-                      <p className="child-birth">🎂 {child.birthDate}</p>
+                      <p className="child-birth">{child.birthDate}</p>
                       <p className="child-age">만 {calculateAge(child.birthDate)}세</p>
                       <p className="child-relationship">
                         {child.relationship === 'child' ? '자녀' : '손자녀'}
@@ -334,7 +334,7 @@ function ChildSetup({ onChildSelected }) {
               {/* 자녀와의 관계 */}
               <div className="form-group">
                 <label htmlFor="relationship" className="form-label">
-                  자녀와의 관계
+                  관계
                 </label>
                 <select
                   id="relationship"
@@ -359,14 +359,14 @@ function ChildSetup({ onChildSelected }) {
                     className={`gender-button ${formData.gender === 'male' ? 'selected' : ''}`}
                     onClick={() => setFormData(prev => ({...prev, gender: 'male'}))}
                   >
-                    👦 남자아이
+                    남자아이
                   </button>
                   <button
                     type="button"
                     className={`gender-button ${formData.gender === 'female' ? 'selected' : ''}`}
                     onClick={() => setFormData(prev => ({...prev, gender: 'female'}))}
                   >
-                    👧 여자아이
+                    여자아이
                   </button>
                 </div>
               </div>
@@ -399,7 +399,7 @@ function ChildSetup({ onChildSelected }) {
                   className="form-button"
                   disabled={addingChild}
                 >
-                  {addingChild ? '저장 중...' : (children.length === 0 ? '우리 아이 플랜 시작하기 🌱' : '자녀 추가하기')}
+                  {addingChild ? '저장 중...' : (children.length === 0 ? '우리 아이 플랜 시작하기' : '자녀 추가하기')}
                 </button>
               </div>
             </form>
