@@ -488,7 +488,7 @@ function ChildSetup({ onChildSelected }) {
                           <p className="child-birth">{child.birthDate}</p>
                           <p className="child-age">만 {calculateAge(child.birthDate)}세</p>
                           <p className="child-relationship">
-                            {child.relationship === 'child' ? '자녀' : '손자녀'}
+                            {child.relationship === 'child' ? '부모' : '조부모'}
                           </p>
                         </div>
                       </div>
@@ -601,18 +601,25 @@ function ChildSetup({ onChildSelected }) {
                           </div>
                         </div>
 
-                        {/* 관계 */}
+                        {/* 아기와의 관계 */}
                         <div className="form-group">
-                          <label className="form-label">관계</label>
-                          <select
-                            name="relationship"
-                            className="form-select"
-                            value={editFormData.relationship}
-                            onChange={handleEditInputChange}
-                          >
-                            <option value="child">자녀</option>
-                            <option value="grandchild">손자녀</option>
-                          </select>
+                          <label className="form-label">아기와의 관계</label>
+                          <div className="gender-selector">
+                            <button
+                              type="button"
+                              className={`gender-button ${editFormData.relationship === 'child' ? 'selected' : ''}`}
+                              onClick={() => setEditFormData(prev => ({...prev, relationship: 'child'}))}
+                            >
+                              부모
+                            </button>
+                            <button
+                              type="button"
+                              className={`gender-button ${editFormData.relationship === 'grandchild' ? 'selected' : ''}`}
+                              onClick={() => setEditFormData(prev => ({...prev, relationship: 'grandchild'}))}
+                            >
+                              조부모
+                            </button>
+                          </div>
                         </div>
 
                         {/* 성별 */}
@@ -749,21 +756,27 @@ function ChildSetup({ onChildSelected }) {
                 </div>
               </div>
 
-              {/* 자녀와의 관계 */}
+              {/* 아기와의 관계 */}
               <div className="form-group">
-                <label htmlFor="relationship" className="form-label">
-                  관계
+                <label className="form-label">
+                  아기와의 관계
                 </label>
-                <select
-                  id="relationship"
-                  name="relationship"
-                  className="form-select"
-                  value={formData.relationship}
-                  onChange={handleInputChange}
-                >
-                  <option value="child">자녀</option>
-                  <option value="grandchild">손자녀</option>
-                </select>
+                <div className="gender-selector">
+                  <button
+                    type="button"
+                    className={`gender-button ${formData.relationship === 'child' ? 'selected' : ''}`}
+                    onClick={() => setFormData(prev => ({...prev, relationship: 'child'}))}
+                  >
+                    부모
+                  </button>
+                  <button
+                    type="button"
+                    className={`gender-button ${formData.relationship === 'grandchild' ? 'selected' : ''}`}
+                    onClick={() => setFormData(prev => ({...prev, relationship: 'grandchild'}))}
+                  >
+                    조부모
+                  </button>
+                </div>
               </div>
 
               {/* 성별 */}
@@ -817,7 +830,7 @@ function ChildSetup({ onChildSelected }) {
                   className="form-button"
                   disabled={addingChild}
                 >
-                  {addingChild ? '저장 중...' : (children.length === 0 ? '우리 아이 플랜 시작하기' : '자녀 추가하기')}
+                  {addingChild ? '저장 중...' : (children.length === 0 ? '우리 아이 씨드머니 계획 시작하기' : '자녀 추가하기')}
                 </button>
               </div>
             </form>
