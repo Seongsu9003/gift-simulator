@@ -1562,6 +1562,9 @@ function Step4Simulator({ wizardData, updateWizardData, selectedGoal }) {
             </p>
           </div>
 
+          {/* Pi 앱 넛지 CTA */}
+          <PiAppNudge selectedGoal={selectedGoal} monthlyAmount={monthlyAmount} finalAssets={results.summary.finalAssets} />
+
           {/* 안내 사항 */}
           <div className="info-box">
             <h4 style={{ margin: '0 0 0.5rem 0', color: '#3D2C2C' }}>시뮬레이션 안내</h4>
@@ -1574,6 +1577,132 @@ function Step4Simulator({ wizardData, updateWizardData, selectedGoal }) {
           </div>
         </div>
       )}
+    </div>
+  );
+}
+
+// Pi 앱 넛지 CTA 컴포넌트
+// 시뮬레이션 완료 후 Pi 앱으로의 전환을 유도하는 카드
+function PiAppNudge({ selectedGoal, monthlyAmount, finalAssets }) {
+  // Pi 앱 링크 (추후 실제 링크로 교체)
+  const PI_APP_URL = 'https://hanwha.com';
+
+  // 목표별 맞춤 헤드라인
+  const goalHeadlines = {
+    tuition: '대학 등록금 마련 플랜, 이제 실행만 남았어요',
+    jeonse: '첫 전셋집 보증금 마련 플랜, 이제 실행만 남았어요',
+    seedmoney: '시드머니 마련 플랜, 이제 실행만 남았어요',
+    general: '씨드머니 플랜이 완성됐어요',
+  };
+
+  const headline = goalHeadlines[selectedGoal] || '씨드머니 플랜이 완성됐어요';
+
+  // 금액 포맷
+  const fmtAssets = (v) => {
+    if (!v) return '';
+    if (v >= 100000000) return `약 ${(v / 100000000).toFixed(1)}억원`;
+    if (v >= 10000) return `약 ${Math.round(v / 10000).toLocaleString('ko-KR')}만원`;
+    return `${v.toLocaleString('ko-KR')}원`;
+  };
+
+  const fmtMonthly = (v) => {
+    if (!v) return '';
+    return `월 ${Math.round(v / 10000).toLocaleString('ko-KR')}만원`;
+  };
+
+  return (
+    <div style={{
+      background: 'linear-gradient(135deg, #FF8C69 0%, #FF6B45 100%)',
+      borderRadius: '20px',
+      padding: '28px 24px',
+      marginBottom: '16px',
+      position: 'relative',
+      overflow: 'hidden',
+    }}>
+      {/* 배경 장식 원 */}
+      <div style={{
+        position: 'absolute', top: '-30px', right: '-30px',
+        width: '140px', height: '140px', borderRadius: '50%',
+        background: 'rgba(255,255,255,0.08)',
+      }} />
+      <div style={{
+        position: 'absolute', bottom: '-20px', right: '40px',
+        width: '80px', height: '80px', borderRadius: '50%',
+        background: 'rgba(255,255,255,0.06)',
+      }} />
+
+      {/* Pi 앱 배지 */}
+      <div style={{
+        display: 'inline-flex', alignItems: 'center', gap: '6px',
+        background: 'rgba(255,255,255,0.2)', borderRadius: '20px',
+        padding: '4px 12px', marginBottom: '14px',
+      }}>
+        <span style={{ fontSize: '13px', color: '#fff', fontWeight: 700, letterSpacing: '0.3px' }}>
+          Pi — 생애필수 증여앱
+        </span>
+      </div>
+
+      {/* 헤드라인 */}
+      <h3 style={{
+        margin: '0 0 8px 0', fontSize: '20px', fontWeight: 800,
+        color: '#fff', lineHeight: 1.35,
+      }}>
+        {headline}
+      </h3>
+
+      {/* 플랜 요약 */}
+      {monthlyAmount && finalAssets && (
+        <p style={{ margin: '0 0 18px 0', fontSize: '14px', color: 'rgba(255,255,255,0.85)', lineHeight: 1.6 }}>
+          {fmtMonthly(monthlyAmount)} 적립으로 {fmtAssets(finalAssets)} 목표,<br />
+          Pi에서 증여 신고부터 ETF 투자까지 한 번에 실행하세요.
+        </p>
+      )}
+
+      {/* 핵심 기능 3가지 */}
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', marginBottom: '22px' }}>
+        {[
+          { icon: '01', text: '현금 증여 신고 — 홈택스 직접 연동, 신고 대행' },
+          { icon: '02', text: '미국 ETF 월 적립 투자 — VOO, QQQM 자동 매수' },
+          { icon: '03', text: '씨드머니 플랜 자동 실행 — 플랜대로 운영' },
+        ].map(({ icon, text }) => (
+          <div key={icon} style={{ display: 'flex', alignItems: 'flex-start', gap: '10px' }}>
+            <span style={{
+              flexShrink: 0, width: '22px', height: '22px', borderRadius: '6px',
+              background: 'rgba(255,255,255,0.25)', display: 'flex', alignItems: 'center',
+              justifyContent: 'center', fontSize: '10px', fontWeight: 800, color: '#fff',
+            }}>
+              {icon}
+            </span>
+            <span style={{ fontSize: '13px', color: 'rgba(255,255,255,0.9)', lineHeight: 1.5 }}>
+              {text}
+            </span>
+          </div>
+        ))}
+      </div>
+
+      {/* CTA 버튼 */}
+      <a
+        href={PI_APP_URL}
+        target="_blank"
+        rel="noopener noreferrer"
+        style={{
+          display: 'block', textAlign: 'center',
+          background: '#fff', color: '#FF6B45',
+          fontSize: '16px', fontWeight: 800,
+          padding: '16px 24px', borderRadius: '14px',
+          textDecoration: 'none',
+          boxShadow: '0 4px 20px rgba(0,0,0,0.15)',
+          letterSpacing: '0.2px',
+          fontFamily: "'Pretendard Variable', Pretendard, sans-serif",
+        }}
+      >
+        Pi 앱으로 바로 시작하기
+      </a>
+
+      {/* 면책 문구 */}
+      <p style={{ margin: '12px 0 0 0', fontSize: '11px', color: 'rgba(255,255,255,0.55)', textAlign: 'center' }}>
+        * 현재 테스트 링크입니다 — 실제 앱 출시 시 링크가 변경됩니다
+      </p>
     </div>
   );
 }
