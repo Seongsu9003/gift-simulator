@@ -1,7 +1,15 @@
 import React, { useState } from 'react';
 
+// 목표별 표시 문구 매핑
+const GOAL_LABELS = {
+  tuition: '대학 등록금 및 유학 자금',
+  jeonse: '첫 전셋집 마련 보증금',
+  seedmoney: '사회초년생 시드머니',
+  general: '종합 플랜',
+};
+
 // 스텝 위자드 메인 컴포넌트
-function StepWizard({ childInfo }) {
+function StepWizard({ childInfo, selectedGoal }) {
   // 현재 스텝 상태 (1~4)
   const [currentStep, setCurrentStep] = useState(1);
 
@@ -70,6 +78,41 @@ function StepWizard({ childInfo }) {
       ...prev,
       ...newData
     }));
+  };
+
+  // 목표 배너 렌더링 - selectedGoal이 있을 때만 표시
+  const renderGoalBanner = () => {
+    if (!selectedGoal || selectedGoal === 'general') return null;
+
+    return (
+      <div style={{
+        background: '#FFF5F3',
+        borderBottom: '1px solid #FFD9CC',
+        padding: '10px 0',
+      }}>
+        <div className="container">
+          <p style={{
+            margin: 0,
+            fontSize: '13px',
+            color: '#FF8C69',
+            fontWeight: 600,
+            display: 'flex',
+            alignItems: 'center',
+            gap: '6px',
+          }}>
+            <span style={{
+              display: 'inline-block',
+              width: '6px',
+              height: '6px',
+              borderRadius: '50%',
+              background: '#FF8C69',
+              flexShrink: 0,
+            }} />
+            목표: {GOAL_LABELS[selectedGoal]} 마련을 위한 씨드머니 계획
+          </p>
+        </div>
+      </div>
+    );
   };
 
   // 스텝 인디케이터 렌더링
@@ -202,6 +245,9 @@ function StepWizard({ childInfo }) {
 
   return (
     <div className="step-wizard">
+      {/* 목표 배너 - 선택된 목표가 있을 때만 표시 */}
+      {renderGoalBanner()}
+
       {/* 스텝 인디케이터 */}
       {renderStepIndicator()}
 

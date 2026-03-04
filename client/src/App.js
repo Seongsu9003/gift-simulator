@@ -5,6 +5,7 @@ import './App.css';
 import Login from './components/Login';
 import ChildSetup from './components/ChildSetup';
 import StepWizard from './components/StepWizard';
+import GoalSelection from './components/GoalSelection';
 import { getChildren, migrateOldChildData, getSelectedChildId } from './utils/firestore';
 
 function App() {
@@ -14,6 +15,10 @@ function App() {
   const [childInfo, setChildInfo] = useState(null); // 현재 선택된 자녀 정보
   const [needsChildSetup, setNeedsChildSetup] = useState(false);
   const [showChildSelector, setShowChildSelector] = useState(false);
+
+  // 목표 선택 상태 - GoalSelection 화면 표시 여부 및 선택된 목표
+  const [needsGoalSelection, setNeedsGoalSelection] = useState(false);
+  const [selectedGoal, setSelectedGoal] = useState(null);
 
   // Firebase 인증 상태 감지
   useEffect(() => {
@@ -64,15 +69,30 @@ function App() {
   }, []);
 
   // 자녀 설정 완료 처리 (자녀 선택 또는 추가 완료)
+  // → 자녀가 선택되면 바로 위자드가 아닌 목표 선택 화면으로 이동
   const handleChildSetupComplete = (childData) => {
     setChildInfo(childData);
     setNeedsChildSetup(false);
     setShowChildSelector(false);
+    // 자녀가 바뀔 때마다 목표를 새로 선택하도록 초기화
+    setSelectedGoal(null);
+    setNeedsGoalSelection(true);
+  };
+
+  // 목표 선택 완료 처리
+  const handleGoalSelected = (goalId) => {
+    setSelectedGoal(goalId);
+    setNeedsGoalSelection(false);
   };
 
   // 자녀 전환 버튼 클릭 처리
   const handleChildSwitcher = () => {
     setShowChildSelector(true);
+  };
+
+  // 목표 변경 버튼 클릭 처리 (헤더에서 접근 가능)
+  const handleGoalChange = () => {
+    setNeedsGoalSelection(true);
   };
 
   // 로그아웃 처리
@@ -83,6 +103,8 @@ function App() {
       setUser(null);
       setChildInfo(null);
       setNeedsChildSetup(false);
+      setNeedsGoalSelection(false);
+      setSelectedGoal(null);
       console.log('로그아웃 완료');
     } catch (error) {
       console.error('로그아웃 에러:', error);
@@ -168,6 +190,23 @@ function App() {
     );
   }
 
+  // 목표 선택 화면 - 자녀 선택 완료 후 위자드 진입 전
+  if (needsGoalSelection) {
+    return (
+      <div className="app">
+        <GoalSelection childInfo={childInfo} onGoalSelected={handleGoalSelected} />
+      </div>
+    );
+  }
+
+  // 목표 표시 라벨 매핑
+  const goalLabels = {
+    tuition: '대학 등록금',
+    jeonse: '첫 전셋집',
+    seedmoney: '시드머니',
+    general: '종합 플랜',
+  };
+
   return (
     <div className="app">
       {/* 자녀 전환 헤더 */}
@@ -184,15 +223,39 @@ function App() {
                 {childInfo?.name}님의 씨드머니 계획
               </h1>
             </div>
-            <button className="logout-button" onClick={handleLogout}>
-              로그아웃
-            </button>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+              {/* 선택된 목표 뱃지 + 변경 버튼 */}
+              {selectedGoal && (
+                <button
+                  onClick={handleGoalChange}
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '6px',
+                    padding: '6px 12px',
+                    borderRadius: '20px',
+                    border: '1.5px solid #FF8C69',
+                    background: '#FFF5F3',
+                    color: '#FF8C69',
+                    fontSize: '12px',
+                    fontWeight: 600,
+                    cursor: 'pointer',
+                    whiteSpace: 'nowrap',
+                  }}
+                >
+                  목표: {goalLabels[selectedGoal]} ✕
+                </button>
+              )}
+              <button className="logout-button" onClick={handleLogout}>
+                로그아웃
+              </button>
+            </div>
           </div>
         </div>
       </header>
 
-      {/* 스텝 위자드 */}
-      <StepWizard childInfo={childInfo} />
+      {/* 스텝 위자드 - selectedGoal 전달 */}
+      <StepWizard childInfo={childInfo} selectedGoal={selectedGoal} />
 
       {/* 푸터 */}
       <footer className="app-footer">
