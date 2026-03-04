@@ -1,4 +1,14 @@
 import React, { useState } from 'react';
+import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
+import {
+  GOAL_BASE_AMOUNTS,
+  GOAL_REFERENCE_DATA,
+  calcInflatedAmount,
+  calcYearsUntilGoal,
+  calcDepositProjection,
+  formatManWon,
+  DEPOSIT_RATE,
+} from '../utils/inflation';
 
 // 목표별 표시 문구 매핑
 const GOAL_LABELS = {
@@ -229,6 +239,7 @@ function StepWizard({ childInfo, selectedGoal }) {
             wizardData={wizardData}
             updateWizardData={updateWizardData}
             onNext={goNext}
+            selectedGoal={selectedGoal}
           />
         );
       case 4:
@@ -236,6 +247,7 @@ function StepWizard({ childInfo, selectedGoal }) {
           <Step4Simulator
             wizardData={wizardData}
             updateWizardData={updateWizardData}
+            selectedGoal={selectedGoal}
           />
         );
       default:
@@ -731,7 +743,7 @@ function Step2Roadmap({ wizardData, updateWizardData, onNext }) {
 }
 
 // Step 3: 증여세 계산 컴포넌트
-function Step3TaxCalculation({ wizardData, updateWizardData, onNext }) {
+function Step3TaxCalculation({ wizardData, updateWizardData, onNext, selectedGoal }) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
@@ -901,8 +913,56 @@ function Step3TaxCalculation({ wizardData, updateWizardData, onNext }) {
 
   const results = wizardData.taxResults;
 
+  // 인플레이션 목표 금액 계산 (selectedGoal이 있을 때만)
+  const inflationBanner = (() => {
+    if (!selectedGoal || selectedGoal === 'general') return null;
+    const baseAmount = GOAL_BASE_AMOUNTS[selectedGoal];
+    if (!baseAmount) return null;
+    const yearsLeft = calcYearsUntilGoal(wizardData.childBirthDate);
+    const inflatedAmount = calcInflatedAmount(baseAmount, yearsLeft);
+    const refData = GOAL_REFERENCE_DATA[selectedGoal];
+    return { baseAmount, inflatedAmount, yearsLeft, refData };
+  })();
+
   return (
     <div className="step-container step3-container">
+      {/* 인플레이션 목표 금액 배너 */}
+      {inflationBanner && (
+        <div style={{
+          background: 'linear-gradient(135deg, #FFF5F3 0%, #FFF9F7 100%)',
+          border: '1.5px solid #FFD9CC',
+          borderRadius: '16px',
+          padding: '20px',
+          marginBottom: '24px',
+        }}>
+          <p style={{ margin: '0 0 12px 0', fontSize: '13px', color: '#FF8C69', fontWeight: 700 }}>
+            목표 금액 리얼리티 체크
+          </p>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', gap: '12px', flexWrap: 'wrap' }}>
+            <div>
+              <p style={{ margin: '0 0 4px 0', fontSize: '13px', color: '#9CA3AF' }}>
+                현재 {inflationBanner.refData?.label} 기준 ({new Date().getFullYear()}년)
+              </p>
+              <p style={{ margin: 0, fontSize: '22px', fontWeight: 800, color: '#3D2C2C' }}>
+                {formatManWon(inflationBanner.baseAmount)}
+              </p>
+            </div>
+            <div style={{ fontSize: '22px', color: '#D1D5DB', fontWeight: 300 }}>→</div>
+            <div style={{ textAlign: 'right' }}>
+              <p style={{ margin: '0 0 4px 0', fontSize: '13px', color: '#9CA3AF' }}>
+                {inflationBanner.yearsLeft}년 후 예상 ({new Date().getFullYear() + inflationBanner.yearsLeft}년, 연 3% 반영)
+              </p>
+              <p style={{ margin: 0, fontSize: '26px', fontWeight: 800, color: '#FF8C69' }}>
+                {formatManWon(inflationBanner.inflatedAmount)}
+              </p>
+            </div>
+          </div>
+          <p style={{ margin: '12px 0 0 0', fontSize: '11px', color: '#D1D5DB' }}>
+            연 3% 물가상승률 기준 추정치 | 출처: 통계청 소비자물가지수 | 참고용이며 실제와 다를 수 있습니다
+          </p>
+        </div>
+      )}
+
       <div className="step-header">
         <h2 className="step-title">증여세 계산 결과</h2>
         <p className="step-subtitle">
@@ -1016,7 +1076,7 @@ function Step3TaxCalculation({ wizardData, updateWizardData, onNext }) {
 }
 
 // Step 4: 수익률 시뮬레이션 컴포넌트
-function Step4Simulator({ wizardData, updateWizardData }) {
+function Step4Simulator({ wizardData, updateWizardData, selectedGoal }) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [monthlyAmount, setMonthlyAmount] = useState(parseInt(wizardData.monthlyInvestment) || 100000);
@@ -1323,6 +1383,129 @@ function Step4Simulator({ wizardData, updateWizardData }) {
               </div>
             </div>
           </div>
+
+          {/* 예금 vs ETF 비교 차트 */}
+          {(() => {
+            // 예금 예상 자산 계산 (클라이언트 사이드, API 불필요)
+            const depositData = calcDepositProjection(monthlyAmount, results.yearlyProjection.length);
+            // ETF 데이터와 예금 데이터를 연도 기준으로 병합
+            const mergedData = results.yearlyProjection.map((item, idx) => ({
+              year: item.year,
+              납입원금: item.cumulativeInvestment,
+              예금: depositData[idx]?.depositAssets || 0,
+              미국ETF: item.projectedAssets,
+            }));
+
+            // 최종 수익률 계산
+            const lastItem = results.yearlyProjection[results.yearlyProjection.length - 1];
+            const lastDeposit = depositData[depositData.length - 1];
+            const totalInvestment = lastItem.cumulativeInvestment;
+            const etfReturnPct = Math.round(((lastItem.projectedAssets - totalInvestment) / totalInvestment) * 100);
+            const depositReturnPct = Math.round(((lastDeposit.depositAssets - totalInvestment) / totalInvestment) * 100);
+
+            // 금액 포맷 (차트 Y축용)
+            const fmtShort = (v) => {
+              if (v >= 100000000) return (v / 100000000).toFixed(1) + '억';
+              if (v >= 10000000) return (v / 10000000).toFixed(0) + '천만';
+              if (v >= 10000) return (v / 10000).toFixed(0) + '만';
+              return v;
+            };
+
+            // 커스텀 툴팁
+            const ChartTooltip = ({ active, payload, label }) => {
+              if (!active || !payload || !payload.length) return null;
+              return (
+                <div style={{ background: 'white', border: '1px solid #E5E7EB', borderRadius: '10px', padding: '12px', boxShadow: '0 4px 12px rgba(0,0,0,0.1)', fontSize: '13px' }}>
+                  <p style={{ margin: '0 0 8px 0', fontWeight: 700, color: '#3D2C2C' }}>{label}년차</p>
+                  {payload.map((entry) => (
+                    <p key={entry.name} style={{ margin: '3px 0', color: entry.color, fontWeight: 600 }}>
+                      {entry.name}: {fmtShort(entry.value)}원
+                    </p>
+                  ))}
+                </div>
+              );
+            };
+
+            return (
+              <>
+                {/* 스토리텔링 비교 카드 */}
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px', marginBottom: '20px' }}>
+                  <div style={{ background: '#F9FAFB', border: '2px solid #E5E7EB', borderRadius: '16px', padding: '16px', textAlign: 'center' }}>
+                    <p style={{ margin: '0 0 6px 0', fontSize: '12px', color: '#9CA3AF', fontWeight: 600 }}>정기예금 ({(DEPOSIT_RATE * 100).toFixed(1)}%)</p>
+                    <p style={{ margin: '0 0 4px 0', fontSize: '22px', fontWeight: 800, color: '#6B7280' }}>
+                      {fmtShort(lastDeposit.depositAssets)}원
+                    </p>
+                    <p style={{ margin: 0, fontSize: '13px', color: '#9CA3AF' }}>
+                      수익률 +{depositReturnPct}%
+                    </p>
+                  </div>
+                  <div style={{ background: '#FFF5F3', border: '2px solid #FF8C69', borderRadius: '16px', padding: '16px', textAlign: 'center' }}>
+                    <p style={{ margin: '0 0 6px 0', fontSize: '12px', color: '#FF8C69', fontWeight: 600 }}>미국 S&P 500 ETF ({annualReturnRate.toFixed(2)}%)</p>
+                    <p style={{ margin: '0 0 4px 0', fontSize: '22px', fontWeight: 800, color: '#FF8C69' }}>
+                      {fmtShort(lastItem.projectedAssets)}원
+                    </p>
+                    <p style={{ margin: 0, fontSize: '13px', color: '#FF8C69', fontWeight: 700 }}>
+                      수익률 +{etfReturnPct}%
+                    </p>
+                  </div>
+                </div>
+
+                {/* 듀얼 그래프 */}
+                <div className="result-card">
+                  <h3 className="result-title">예금 vs 미국 ETF 자산 성장 비교</h3>
+                  <p style={{ margin: '0 0 16px 0', fontSize: '13px', color: '#9CA3AF' }}>
+                    같은 원금, 같은 기간 — 어디에 넣느냐가 미래를 바꿉니다
+                  </p>
+                  <div style={{ width: '100%', height: '320px' }}>
+                    <ResponsiveContainer width="100%" height="100%">
+                      <LineChart data={mergedData} margin={{ top: 10, right: 16, left: 8, bottom: 10 }}>
+                        <CartesianGrid strokeDasharray="3 3" stroke="#F3F4F6" />
+                        <XAxis dataKey="year" fontSize={11} stroke="#D1D5DB" tickFormatter={(v) => `${v}년`} />
+                        <YAxis fontSize={11} stroke="#D1D5DB" tickFormatter={fmtShort} width={52} />
+                        <Tooltip content={<ChartTooltip />} />
+                        <Legend wrapperStyle={{ fontSize: '12px', paddingTop: '12px' }} />
+                        <Line
+                          type="monotone" dataKey="납입원금"
+                          stroke="#E5E7EB" strokeWidth={2} strokeDasharray="4 4"
+                          dot={false} name="납입 원금"
+                        />
+                        <Line
+                          type="monotone" dataKey="예금"
+                          stroke="#9CA3AF" strokeWidth={2}
+                          dot={false} name={`정기예금 (${(DEPOSIT_RATE * 100).toFixed(1)}%)`}
+                          animationDuration={1000}
+                        />
+                        <Line
+                          type="monotone" dataKey="미국ETF"
+                          stroke="#FF8C69" strokeWidth={3}
+                          dot={false} name={`미국 S&P 500 (${annualReturnRate.toFixed(2)}%)`}
+                          animationDuration={1500} animationBegin={400}
+                        />
+                      </LineChart>
+                    </ResponsiveContainer>
+                  </div>
+                  {/* 과거 실증 데이터 스토리텔링 */}
+                  <div style={{
+                    marginTop: '16px',
+                    padding: '14px 16px',
+                    background: '#FFFDF9',
+                    border: '1px solid #FFE8E0',
+                    borderRadius: '12px',
+                    fontSize: '13px',
+                    color: '#6B7280',
+                    lineHeight: 1.7,
+                  }}>
+                    <strong style={{ color: '#FF8C69' }}>과거 실증 데이터 (2005~2025, 20년)</strong><br />
+                    매월 20만원씩 20년간 적립 시 — 원금 4,860만원 기준<br />
+                    정기예금: 약 7,900만원 (+62%) vs 미국 S&P 500: 약 2.9억원 (+499%)<br />
+                    <span style={{ fontSize: '11px', color: '#D1D5DB' }}>
+                      ※ 과거 수익률이 미래 수익률을 보장하지 않습니다. 참고용입니다.
+                    </span>
+                  </div>
+                </div>
+              </>
+            );
+          })()}
 
           {/* 주요 구간별 상세 정보 */}
           <div className="result-card">
